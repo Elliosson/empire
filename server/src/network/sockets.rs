@@ -72,8 +72,8 @@ fn response(
     map_to_send: Arc<Mutex<HashMap<String, Vec<(u32, i32, Position, Renderable)>>>>,
     player_info_to_send: Arc<Mutex<HashMap<String, String>>>,
 ) -> (String, Message) {
-    let map_guard = map_to_send.lock().unwrap();
-    let player_info_guard = player_info_to_send.lock().unwrap();
+    let _map_guard = map_to_send.lock().unwrap();
+    let _player_info_guard = player_info_to_send.lock().unwrap();
 
     match msg {
         //this is very tricky because since the uuid is created here we don't return the same message that the on we received

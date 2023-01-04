@@ -12,7 +12,6 @@ use network::Config;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::time;
 use std::{env, process};
 
 struct State {
