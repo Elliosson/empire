@@ -5,6 +5,7 @@ pub enum Message {
     Register,
     Play(String),
     Config,
+    Map,
     Unknown,
 }
 
@@ -16,6 +17,7 @@ pub fn handle_responce<F>(
 where
     F: Fn(String, String) + Clone + 'static,
 {
+    println!("incoming message: {}", msg);
     let mut parts = msg.split_whitespace();
 
     let command = parts.next()?;
@@ -44,6 +46,14 @@ where
         "config" => {
             //lot of stuff
             Message::Config
+        }
+        "map" => {
+            let mut data_guard = data.lock().unwrap();
+
+            let map: String = parts.collect::<String>();
+
+            data_guard.map_string = map;
+            Message::Map
         }
         _ => Message::Unknown,
     };

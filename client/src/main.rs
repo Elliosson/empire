@@ -6,11 +6,19 @@ use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 mod components;
 mod network;
 pub use components::*;
+mod systems;
+pub use systems::*;
+//add default and stuff?
+#[derive(Resource)]
+pub struct DataWrap {
+    protected_data: Arc<Mutex<Data>>,
+}
 pub struct Data {
     pub characters: Vec<Point>,
     pub my_uid: String,
     pub map: Vec<(u32, i32, Point, Renderable)>,
     pub info_string: String,
+    pub map_string: String,
 }
 
 fn main() {
@@ -20,15 +28,28 @@ fn main() {
         my_uid: "".to_string(),
         map: vec![],
         info_string: "".to_string(),
+        map_string: "".to_string(),
     };
-    let protect_data: Arc<Mutex<Data>> = Arc::new(Mutex::new(data));
+    let data_wrap = DataWrap {
+        protected_data: Arc::new(Mutex::new(data)),
+    };
+
     let to_send: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
-    network::lauch_network(protect_data.clone(), to_send.clone());
+    network::lauch_network(data_wrap.protected_data.clone(), to_send.clone());
+    {
+        let mut to_send_guard = to_send.lock().unwrap();
+        to_send_guard.push("a5764857-ae35-34dc-8f25-a9c9e73aa898 map".to_string());
+    }
+
+    let map = Map::default();
 
     App::new()
         .add_plugins(DefaultPlugins)
+        .insert_resource(map)
+        .insert_resource(data_wrap)
         .add_startup_system(setup)
         .add_system(move_camera)
+        .add_system(deserialize_map_system)
         .run();
 }
 

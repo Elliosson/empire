@@ -25,6 +25,7 @@ pub enum Message {
 impl Message {
     //the return String command contain : play, register or map etc
     pub fn from(msg: &str) -> Option<(Message, String)> {
+        println!("message: {}", msg);
         if msg.starts_with("register") {
             let mut parts = msg.split_whitespace();
             let _register = parts.next()?;
