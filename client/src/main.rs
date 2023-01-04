@@ -1,8 +1,30 @@
 //! Shows how to render simple primitive shapes with a single color.
 
+use std::sync::{Arc, Mutex};
+
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
+mod components;
+mod network;
+pub use components::*;
+pub struct Data {
+    pub characters: Vec<Point>,
+    pub my_uid: String,
+    pub map: Vec<(u32, i32, Point, Renderable)>,
+    pub info_string: String,
+}
 
 fn main() {
+    //Shared data between the network and the game system
+    let data = Data {
+        characters: vec![],
+        my_uid: "".to_string(),
+        map: vec![],
+        info_string: "".to_string(),
+    };
+    let protect_data: Arc<Mutex<Data>> = Arc::new(Mutex::new(data));
+    let to_send: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
+    network::lauch_network(protect_data.clone(), to_send.clone());
+
     App::new()
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup)
