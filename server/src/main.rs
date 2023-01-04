@@ -7,6 +7,13 @@ mod component;
 pub use component::*;
 mod left_walker_system;
 pub use left_walker_system::*;
+mod network;
+use network::Config;
+use std::collections::HashMap;
+use std::sync::{Arc, Mutex};
+use std::thread;
+use std::time;
+use std::{env, process};
 
 struct State {
     ecs: World,
@@ -47,6 +54,32 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<LeftMover>();
+
+    let args: Vec<String> = env::args().collect();
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("Error creating Config: {}", err);
+        println!("Usage: server url");
+        process::exit(1);
+    });
+
+    println!("url: {}", config.url);
+    let message_list: Arc<Mutex<Vec<(network::Message, String)>>> =
+        Arc::new(Mutex::new(Vec::new()));
+
+    let map_to_send: Arc<Mutex<HashMap<String, Vec<(u32, i32, Position, Renderable)>>>> =
+        Arc::new(Mutex::new(HashMap::new()));
+
+    let player_info_to_send: Arc<Mutex<HashMap<String, String>>> =
+        Arc::new(Mutex::new(HashMap::new()));
+
+    gs.ecs.insert(message_list.clone());
+
+    gs.ecs.insert(map_to_send.clone());
+    gs.ecs.insert(player_info_to_send.clone());
+
+    thread::spawn(move || {
+        network::run(config, message_list, map_to_send, player_info_to_send);
+    });
 
     for i in 0..10 {
         gs.ecs
