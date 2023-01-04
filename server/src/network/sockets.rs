@@ -1,5 +1,5 @@
 use super::message::Message;
-use crate::{Position, Renderable};
+use crate::MapMessage;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use uuid::Uuid;
@@ -23,7 +23,7 @@ impl Config {
 pub fn run(
     config: Config,
     message_list: Arc<Mutex<Vec<(Message, String)>>>,
-    map_to_send: Arc<Mutex<HashMap<String, Vec<(u32, i32, Position, Renderable)>>>>,
+    map_to_send: Arc<Mutex<MapMessage>>, //TODO formaliser le naming des structure partage
     player_info_to_send: Arc<Mutex<HashMap<String, String>>>,
 ) {
     ws::listen(config.url, move |out| {
@@ -69,10 +69,10 @@ pub fn run(
 
 fn response(
     msg: Message,
-    map_to_send: Arc<Mutex<HashMap<String, Vec<(u32, i32, Position, Renderable)>>>>,
+    map_to_send: Arc<Mutex<MapMessage>>,
     player_info_to_send: Arc<Mutex<HashMap<String, String>>>,
 ) -> (String, Message) {
-    let _map_guard = map_to_send.lock().unwrap();
+    let map_guard = map_to_send.lock().unwrap();
     let _player_info_guard = player_info_to_send.lock().unwrap();
 
     match msg {
@@ -82,6 +82,7 @@ fn response(
             let uuid = Uuid::new_v4();
             (uuid.to_string(), Message::Registered(uuid, name))
         }
+        Message::Map(_uuid) => (map_guard.map_json.clone(), msg),
         _ => ("ok".to_string(), msg),
     }
 }

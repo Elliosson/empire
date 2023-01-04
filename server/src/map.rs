@@ -1,11 +1,7 @@
 use rltk::{Rltk, RGB};
+use serde::{Deserialize, Serialize};
 
-#[derive(PartialEq, Copy, Clone)]
-pub enum TileType {
-    Wall,
-    Floor,
-}
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub enum Biome {
     #[default]
     Plain,
@@ -13,12 +9,12 @@ pub enum Biome {
     Desert,
     Mountain,
 }
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Tile {
     pub biome: Biome,
 }
 
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Map {
     pub tiles: Vec<Tile>,
 }

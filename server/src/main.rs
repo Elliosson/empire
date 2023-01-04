@@ -44,6 +44,12 @@ impl State {
     }
 }
 
+#[derive(Clone, Debug, Default)]
+pub struct MapMessage {
+    pub map: Map,
+    pub map_json: String,
+}
+
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50().with_title("Sumerian").build()?;
@@ -65,8 +71,12 @@ fn main() -> rltk::BError {
     let message_list: Arc<Mutex<Vec<(network::Message, String)>>> =
         Arc::new(Mutex::new(Vec::new()));
 
-    let map_to_send: Arc<Mutex<HashMap<String, Vec<(u32, i32, Position, Renderable)>>>> =
-        Arc::new(Mutex::new(HashMap::new()));
+    //quickly set something for test
+    let mut map_message = MapMessage::default();
+    map_message.map = new_map();
+    map_message.map_json = serde_json::to_string(&map_message.map).unwrap();
+
+    let map_to_send: Arc<Mutex<MapMessage>> = Arc::new(Mutex::new(map_message));
 
     let player_info_to_send: Arc<Mutex<HashMap<String, String>>> =
         Arc::new(Mutex::new(HashMap::new()));
