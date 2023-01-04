@@ -42,11 +42,13 @@ fn main() {
     }
 
     let map = Map::default();
+    let pos_to_entity = PositionToTileEntity::default();
 
     App::new()
         .add_plugins(DefaultPlugins)
         .insert_resource(map)
         .insert_resource(data_wrap)
+        .insert_resource(pos_to_entity)
         .add_startup_system(setup)
         .add_system(move_camera)
         .add_system(deserialize_map_system)

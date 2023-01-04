@@ -1,4 +1,5 @@
-use bevy::prelude::Resource;
+use bevy::prelude::*;
+use bevy::{prelude::Resource, utils::HashMap};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -31,4 +32,9 @@ pub struct Point {
 pub struct Renderable {
     pub glyph: u8,
     pub render_order: i32,
+}
+
+#[derive(Resource, Debug, Clone, Default)]
+pub struct PositionToTileEntity {
+    pub hash: HashMap<(i32, i32), Entity>,
 }
