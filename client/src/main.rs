@@ -50,6 +50,7 @@ fn main() {
         .add_startup_system(setup)
         .add_system(move_camera)
         .add_system(deserialize_map_system)
+        .add_system(map_system)
         .run();
 }
 

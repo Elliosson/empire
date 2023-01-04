@@ -23,6 +23,13 @@ pub fn xy_idx(x: i32, y: i32) -> usize {
     (y as usize * 80) + x as usize
 }
 
+pub fn idx_xy(idx: usize) -> (i32, i32) {
+    let x = (idx % 80) as i32;
+    let y = (idx / 80) as i32;
+
+    return (x, y);
+}
+
 pub fn new_map() -> Map {
     let mut map = Map::default();
     map.tiles = vec![Tile::default(); 80 * 50];

@@ -12,6 +12,8 @@ pub enum Biome {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Tile {
     pub biome: Biome,
+    pub x: i32,
+    pub y: i32,
 }
 
 #[derive(Resource, Debug, Clone, Default, Serialize, Deserialize)]

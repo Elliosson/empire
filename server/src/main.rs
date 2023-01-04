@@ -9,6 +9,7 @@ mod left_walker_system;
 pub use left_walker_system::*;
 mod network;
 use network::Config;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -44,7 +45,33 @@ impl State {
     }
 }
 
-#[derive(Clone, Debug, Default)]
+pub fn FormatMapForClient(map: &Map) -> MapForClient {
+    let mut client_map: MapForClient = MapForClient::default();
+
+    for (i, tile) in map.tiles.iter().enumerate() {
+        let (x, y) = idx_xy(i);
+        client_map.tiles.push(TileForClient {
+            biome: tile.biome.clone(),
+            x,
+            y,
+        });
+    }
+
+    return client_map;
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct TileForClient {
+    pub biome: Biome,
+    pub x: i32,
+    pub y: i32,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct MapForClient {
+    pub tiles: Vec<TileForClient>,
+}
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct MapMessage {
     pub map: Map,
     pub map_json: String,
@@ -74,7 +101,7 @@ fn main() -> rltk::BError {
     //quickly set something for test
     let mut map_message = MapMessage::default();
     map_message.map = new_map();
-    map_message.map_json = serde_json::to_string(&map_message.map).unwrap();
+    map_message.map_json = serde_json::to_string(&FormatMapForClient(&map_message.map)).unwrap();
 
     let map_to_send: Arc<Mutex<MapMessage>> = Arc::new(Mutex::new(map_message));
 
