@@ -1,9 +1,9 @@
-use rltk::{ RGB, Rltk, RandomNumberGenerator };
-use std::cmp::{max, min};
+use rltk::{Rltk, RGB};
 
 #[derive(PartialEq, Copy, Clone)]
 pub enum TileType {
-    Wall, Floor
+    Wall,
+    Floor,
 }
 
 pub fn xy_idx(x: i32, y: i32) -> usize {
@@ -11,7 +11,7 @@ pub fn xy_idx(x: i32, y: i32) -> usize {
 }
 
 pub fn new_map() -> Vec<TileType> {
-    let mut map = vec![TileType::Floor; 80*50];
+    let mut map = vec![TileType::Floor; 80 * 50];
 
     // Make the boundaries walls
     for x in 0..80 {
@@ -39,17 +39,29 @@ pub fn new_map() -> Vec<TileType> {
     map
 }
 
-pub fn draw_map(map: &[TileType], ctx : &mut Rltk) {
+pub fn draw_map(map: &[TileType], ctx: &mut Rltk) {
     let mut y = 0;
     let mut x = 0;
     for tile in map.iter() {
         // Render a tile depending upon the tile type
         match tile {
             TileType::Floor => {
-                ctx.set(x, y, RGB::from_f32(0.5, 0.5, 0.5), RGB::from_f32(0., 0., 0.), rltk::to_cp437('.'));
+                ctx.set(
+                    x,
+                    y,
+                    RGB::from_f32(0.5, 0.5, 0.5),
+                    RGB::from_f32(0., 0., 0.),
+                    rltk::to_cp437('.'),
+                );
             }
             TileType::Wall => {
-                ctx.set(x, y, RGB::from_f32(0.0, 1.0, 0.0), RGB::from_f32(0., 0., 0.), rltk::to_cp437('#'));
+                ctx.set(
+                    x,
+                    y,
+                    RGB::from_f32(0.0, 1.0, 0.0),
+                    RGB::from_f32(0., 0., 0.),
+                    rltk::to_cp437('#'),
+                );
             }
         }
 
