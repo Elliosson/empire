@@ -5,26 +5,43 @@ pub enum TileType {
     Wall,
     Floor,
 }
+#[derive(Debug, Clone, Default)]
+pub enum Biome {
+    #[default]
+    Plain,
+    Forest,
+    Desert,
+    Mountain,
+}
+#[derive(Debug, Clone, Default)]
+pub struct Tile {
+    pub biome: Biome,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct Map {
+    pub tiles: Vec<Tile>,
+}
 
 pub fn xy_idx(x: i32, y: i32) -> usize {
     (y as usize * 80) + x as usize
 }
 
-pub fn new_map() -> Vec<TileType> {
-    let mut map = vec![TileType::Floor; 80 * 50];
+pub fn new_map() -> Map {
+    let mut map = Map::default();
+    map.tiles = vec![Tile::default(); 80 * 50];
 
-    // Make the boundaries walls
+    // Make the boundaries mountain
     for x in 0..80 {
-        map[xy_idx(x, 0)] = TileType::Wall;
-        map[xy_idx(x, 49)] = TileType::Wall;
+        map.tiles[xy_idx(x, 0)].biome = Biome::Mountain;
+        map.tiles[xy_idx(x, 49)].biome = Biome::Mountain;
     }
     for y in 0..50 {
-        map[xy_idx(0, y)] = TileType::Wall;
-        map[xy_idx(79, y)] = TileType::Wall;
+        map.tiles[xy_idx(0, y)].biome = Biome::Mountain;
+        map.tiles[xy_idx(79, y)].biome = Biome::Mountain;
     }
 
-    // Now we'll randomly splat a bunch of walls. It won't be pretty, but it's a decent illustration.
-    // First, obtain the thread-local RNG:
+    // Now we'll randomly splat a bunch of desert.
     let mut rng = rltk::RandomNumberGenerator::new();
 
     for _i in 0..400 {
@@ -32,20 +49,20 @@ pub fn new_map() -> Vec<TileType> {
         let y = rng.roll_dice(1, 49);
         let idx = xy_idx(x, y);
         if idx != xy_idx(40, 25) {
-            map[idx] = TileType::Wall;
+            map.tiles[idx].biome = Biome::Desert;
         }
     }
 
     map
 }
 
-pub fn draw_map(map: &[TileType], ctx: &mut Rltk) {
+pub fn draw_map(map: &Map, ctx: &mut Rltk) {
     let mut y = 0;
     let mut x = 0;
-    for tile in map.iter() {
+    for tile in map.tiles.iter() {
         // Render a tile depending upon the tile type
-        match tile {
-            TileType::Floor => {
+        match tile.biome {
+            Biome::Plain => {
                 ctx.set(
                     x,
                     y,
@@ -54,13 +71,22 @@ pub fn draw_map(map: &[TileType], ctx: &mut Rltk) {
                     rltk::to_cp437('.'),
                 );
             }
-            TileType::Wall => {
+            Biome::Mountain => {
                 ctx.set(
                     x,
                     y,
                     RGB::from_f32(0.0, 1.0, 0.0),
                     RGB::from_f32(0., 0., 0.),
                     rltk::to_cp437('#'),
+                );
+            }
+            _ => {
+                ctx.set(
+                    x,
+                    y,
+                    RGB::from_f32(0.0, 1.0, 0.0),
+                    RGB::from_f32(0., 0., 0.),
+                    rltk::to_cp437('-'),
                 );
             }
         }
