@@ -6,6 +6,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_startup_system(setup)
+        .add_system(move_camera)
         .run();
 }
 
@@ -41,4 +42,30 @@ fn setup(
         transform: Transform::from_translation(Vec3::new(100., 0., 0.)),
         ..default()
     });
+}
+
+fn move_camera(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut transforms: Query<&mut Transform, With<Camera2d>>,
+) {
+    if keyboard_input.pressed(KeyCode::Up) {
+        for mut transform in transforms.iter_mut() {
+            transform.translation.y += 10.;
+        }
+    }
+    if keyboard_input.pressed(KeyCode::Down) {
+        for mut transform in transforms.iter_mut() {
+            transform.translation.y -= 10.;
+        }
+    }
+    if keyboard_input.pressed(KeyCode::Right) {
+        for mut transform in transforms.iter_mut() {
+            transform.translation.x += 10.;
+        }
+    }
+    if keyboard_input.pressed(KeyCode::Left) {
+        for mut transform in transforms.iter_mut() {
+            transform.translation.x -= 10.;
+        }
+    }
 }
