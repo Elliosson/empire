@@ -14,6 +14,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::{env, process};
+use systems::*;
 mod systems;
 
 struct State {
@@ -42,6 +43,14 @@ impl State {
     fn run_systems(&mut self) {
         let mut lw = LeftWalker {};
         lw.run_now(&self.ecs);
+        let mut online_player = OnlinePlayerSystem {};
+        online_player.run_now(&self.ecs);
+        let mut attack = AttackSystem {};
+        attack.run_now(&self.ecs);
+        let mut ongoing_attack = OngoingAttackSystem {};
+        ongoing_attack.run_now(&self.ecs);
+        let mut gold_generation = GoldGenerationSystem {};
+        gold_generation.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -55,6 +64,7 @@ pub fn format_map_for_client(map: &Map) -> MapForClient {
             biome: tile.biome.clone(),
             x,
             y,
+            owner: tile.owner.clone(),
         });
     }
 
@@ -66,6 +76,7 @@ pub struct TileForClient {
     pub biome: Biome,
     pub x: i32,
     pub y: i32,
+    pub owner: String,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -83,10 +94,17 @@ fn main() -> rltk::BError {
     let context = RltkBuilder::simple80x50().with_title("Sumerian").build()?;
     let mut gs = State { ecs: World::new() };
     gs.ecs.insert(new_map());
+    gs.ecs.insert(UuidPlayerHash::new());
+    gs.ecs.insert(NamePlayerHash::new());
 
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
     gs.ecs.register::<LeftMover>();
+    gs.ecs.register::<OnGoingAttack>();
+    gs.ecs.register::<WantToAttack>();
+    gs.ecs.register::<Gold>();
+    gs.ecs.register::<Connected>();
+    gs.ecs.register::<Player>();
 
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {

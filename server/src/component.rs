@@ -2,10 +2,16 @@ use rltk::RGB;
 use specs::prelude::*;
 use specs_derive::*;
 
-#[derive(Component)]
+#[derive(Component, Clone, Debug)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
+}
+
+impl Position {
+    pub fn new(x: i32, y: i32) -> Self {
+        return Position { x, y };
+    }
 }
 
 #[derive(Component)]
@@ -19,9 +25,29 @@ pub struct Renderable {
 pub struct LeftMover {}
 
 #[derive(Component, Clone, Debug)]
-pub struct Player {}
+pub struct Player {
+    pub name: String,
+}
 
 #[derive(Component, Clone, Debug)]
 pub struct Connected {
     pub uuid: String,
+}
+
+#[derive(Component, Clone, Debug)]
+pub struct Gold {
+    pub quantity: f32,
+}
+
+#[derive(Component, Clone, Debug)]
+pub struct WantToAttack {
+    pub pos: Position,
+}
+
+#[derive(Component, Clone, Debug)]
+pub struct OnGoingAttack {
+    pub gold: f32,
+    pub last_turn_conquest: Vec<Position>,
+    pub owner: String,
+    pub enemy: Option<String>,
 }

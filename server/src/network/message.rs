@@ -46,7 +46,7 @@ impl Message {
                     let message: Vec<&str> = parts.collect();
                     let x: i32 = message[0].parse().unwrap();
                     let y: i32 = message[1].parse().unwrap();
-                    println!("attack {} {}", x, y);
+                    //println!("attack {} {}", x, y);
                     Some(Message::Attack(id, x, y))
                 }
 

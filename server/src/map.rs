@@ -1,3 +1,4 @@
+use crate::Position;
 use rltk::{Rltk, RGB};
 use serde::{Deserialize, Serialize};
 
@@ -12,6 +13,7 @@ pub enum Biome {
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Tile {
     pub biome: Biome,
+    pub owner: String,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -100,5 +102,21 @@ pub fn draw_map(map: &Map, ctx: &mut Rltk) {
             x = 0;
             y += 1;
         }
+    }
+}
+
+impl Map {
+    pub fn get_tile_mut(&mut self, position: &Position) -> &mut Tile {
+        if position.x < 0 || position.y < 0 {
+            //TODO handle this stuff.
+            return &mut self.tiles[0];
+        }
+        let idx = xy_idx(position.x, position.y);
+        if idx >= self.tiles.len() {
+            println!("Error: request tile out of bound, handle this case");
+            //TODO handle when out of bound stuff are asked.
+            return &mut self.tiles[0];
+        }
+        return &mut self.tiles[idx];
     }
 }

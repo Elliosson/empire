@@ -1,5 +1,5 @@
 extern crate specs;
-use crate::{network, Connected, Map, Player, Position};
+use crate::{network, Connected, Gold, Map, Player, Position, WantToAttack};
 
 use specs::prelude::*;
 use std::collections::HashMap;
@@ -20,6 +20,8 @@ impl<'a> System<'a> for OnlinePlayerSystem {
         WriteStorage<'a, Position>,
         WriteStorage<'a, Connected>,
         WriteStorage<'a, Player>,
+        WriteStorage<'a, WantToAttack>,
+        WriteStorage<'a, Gold>,
         WriteExpect<'a, Map>,
     );
 
@@ -32,6 +34,8 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             positions,
             mut connecteds,
             mut players,
+            mut want_to_attacks,
+            mut golds,
             map,
         ) = data;
 
@@ -46,7 +50,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             //todo hash map to get player entity
 
             for (net_mes, _command) in message_list_guard.iter() {
-                //println!("message list: {:?}, uid {}", net_mes, command);
+                println!("message list: {:?}", net_mes);
                 let mes = net_mes.clone();
 
                 let mut uid = "".to_string();
@@ -67,6 +71,14 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     network::Message::Attack(uuid, x, y) => {
                         uid = uuid.to_string();
                         player_entity = player_hash.hash.get(&uid.clone());
+                        want_to_attacks
+                            .insert(
+                                *player_entity.unwrap(),
+                                WantToAttack {
+                                    pos: Position::new(x, y),
+                                },
+                            )
+                            .unwrap();
                     }
 
                     _ => {}
@@ -116,7 +128,13 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             } else {
                 let new_player = entities
                     .build_entity()
-                    .with(Player {}, &mut players)
+                    .with(
+                        Player {
+                            name: pseudo.clone(),
+                        },
+                        &mut players,
+                    )
+                    .with(Gold { quantity: 100. }, &mut golds)
                     .build();
                 // to_construct.request(
                 //     STARTING_POS_X,

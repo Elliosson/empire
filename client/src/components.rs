@@ -15,6 +15,7 @@ pub struct Tile {
     pub biome: Biome,
     pub x: i32,
     pub y: i32,
+    pub owner: String,
 }
 
 #[derive(Resource, Debug, Clone, Default, Serialize, Deserialize)]

@@ -8,10 +8,15 @@ pub fn map_system(
     mut sprite_query: Query<&mut Sprite>,
 ) {
     for tile in map.tiles.iter() {
-        let color = match tile.biome {
+        let mut color = match tile.biome {
             Biome::Plain => Color::rgb(0.25, 0.75, 0.25),
             _ => Color::rgb(0.25, 0.25, 0.75),
         };
+
+        if tile.owner != "" {
+            color = Color::rgb(0.75, 0.75, 0.75);
+        }
+
         if let Some(&entity) = pos_to_tile_entity.hash.get(&(tile.x, tile.y)) {
             if let Ok(mut sprite) = sprite_query.get_component_mut::<Sprite>(entity) {
                 sprite.color = color;
