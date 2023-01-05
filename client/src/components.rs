@@ -39,3 +39,9 @@ pub struct Renderable {
 pub struct PositionToTileEntity {
     pub hash: HashMap<(i32, i32), Entity>,
 }
+
+#[derive(Resource, Debug, Clone, Default)]
+pub struct UiState {
+    pub username: String,
+    pub gold_percent: i32,
+}

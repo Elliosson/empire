@@ -50,7 +50,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             //todo hash map to get player entity
 
             for (net_mes, _command) in message_list_guard.iter() {
-                println!("message list: {:?}", net_mes);
+                // println!("message list: {:?}", net_mes);
                 let mes = net_mes.clone();
 
                 let mut uid = "".to_string();
@@ -70,15 +70,23 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     }
                     network::Message::Attack(uuid, x, y) => {
                         uid = uuid.to_string();
+                        println!("attack");
                         player_entity = player_hash.hash.get(&uid.clone());
-                        want_to_attacks
-                            .insert(
-                                *player_entity.unwrap(),
-                                WantToAttack {
-                                    pos: Position::new(x, y),
-                                },
-                            )
-                            .unwrap();
+                        match (player_entity) {
+                            Some(player_entity) => {
+                                want_to_attacks
+                                    .insert(
+                                        *player_entity,
+                                        WantToAttack {
+                                            pos: Position::new(x, y),
+                                        },
+                                    )
+                                    .unwrap();
+                            }
+                            None => {
+                                println!("Error: Trying to connect with an unknow uuid")
+                            }
+                        }
                     }
 
                     _ => {}

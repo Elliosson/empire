@@ -25,7 +25,7 @@ impl<'a> System<'a> for GoldGenerationSystem {
 
         for (_entity, player, gold) in (&entities, &mut players, &mut golds).join() {
             gold.quantity += name_to_income.get(&player.name).unwrap_or_else(|| &0.);
-            println!("player: {}, gold: {}", player.name, gold.quantity);
+            // println!("player: {}, gold: {}", player.name, gold.quantity);
         }
     }
 }

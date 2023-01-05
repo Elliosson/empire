@@ -1,5 +1,7 @@
 use crate::{Biome, Map, PositionToTileEntity};
 use bevy::prelude::*;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 
 pub fn map_system(
     mut commands: Commands,
@@ -14,7 +16,12 @@ pub fn map_system(
         };
 
         if tile.owner != "" {
-            color = Color::rgb(0.75, 0.75, 0.75);
+            let hash = calculate_hash(&tile.owner);
+            color = Color::rgb(
+                (hash % 100) as f32 / 100.,
+                (hash / 100 % 100) as f32 / 100.,
+                (hash / 100000 % 100) as f32 / 100.,
+            );
         }
 
         if let Some(&entity) = pos_to_tile_entity.hash.get(&(tile.x, tile.y)) {
@@ -44,4 +51,10 @@ pub fn map_system(
             pos_to_tile_entity.hash.insert((tile.x, tile.y), new_entity);
         }
     }
+}
+
+fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
 }

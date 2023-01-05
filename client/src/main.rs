@@ -3,6 +3,7 @@
 use std::sync::{Arc, Mutex};
 
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
+use bevy_egui::{egui, EguiContext, EguiPlugin};
 mod components;
 mod network;
 pub use components::*;
@@ -60,15 +61,18 @@ fn main() {
 
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugin(EguiPlugin)
         .insert_resource(map)
         .insert_resource(data_wrap)
         .insert_resource(pos_to_entity)
         .insert_resource(to_send_wrap)
+        .insert_resource(UiState::default())
         .add_startup_system(setup)
         .add_system(move_camera)
         .add_system(deserialize_map_system)
         .add_system(map_system)
         .add_system(mouse_input_system)
+        .add_system(username_ui)
         .run();
 }
 

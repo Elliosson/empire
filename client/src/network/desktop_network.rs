@@ -37,6 +37,8 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
             let mut to_send_guard = to_send.lock().unwrap();
 
             for message in to_send_guard.drain(..) {
+                println!("send: {}", message.clone());
+
                 let _ = tx_1.send(OwnedMessage::Text(message));
             }
         }
@@ -119,7 +121,7 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
                             let _q = thread::spawn(move || loop {
                                 message_sender2(uid.clone(), "map".to_string());
                                 message_sender2(uid.clone(), "player_info".to_string());
-                                thread::sleep(Duration::from_millis(50));
+                                thread::sleep(Duration::from_millis(100));
                             });
                         }
                         _ => {}
