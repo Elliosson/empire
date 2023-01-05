@@ -56,7 +56,7 @@ pub fn run(
                     format!("{} {}", command, response)
                 }
                 None => {
-                    println!("None message");
+                    // println!("None message");
                     "err".to_string()
                 }
             };

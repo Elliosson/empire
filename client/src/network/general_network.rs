@@ -17,7 +17,7 @@ pub fn handle_responce<F>(
 where
     F: Fn(String, String) + Clone + 'static,
 {
-    println!("incoming message: {}", msg);
+    // println!("incoming message: {}", msg);
     let mut parts = msg.split_whitespace();
 
     let command = parts.next()?;

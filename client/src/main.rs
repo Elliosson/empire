@@ -13,6 +13,10 @@ pub use systems::*;
 pub struct DataWrap {
     protected_data: Arc<Mutex<Data>>,
 }
+#[derive(Resource)]
+pub struct ToSendWrap {
+    to_send: Arc<Mutex<Vec<String>>>,
+}
 pub struct Data {
     pub characters: Vec<Point>,
     pub my_uid: String,
@@ -41,6 +45,10 @@ fn main() {
         to_send_guard.push("a5764857-ae35-34dc-8f25-a9c9e73aa898 map".to_string());
     }
 
+    let to_send_wrap = ToSendWrap {
+        to_send: to_send.clone(),
+    };
+
     let map = Map::default();
     let pos_to_entity = PositionToTileEntity::default();
 
@@ -55,10 +63,12 @@ fn main() {
         .insert_resource(map)
         .insert_resource(data_wrap)
         .insert_resource(pos_to_entity)
+        .insert_resource(to_send_wrap)
         .add_startup_system(setup)
         .add_system(move_camera)
         .add_system(deserialize_map_system)
         .add_system(map_system)
+        .add_system(mouse_input_system)
         .run();
 }
 
