@@ -17,3 +17,11 @@ pub struct Renderable {
 
 #[derive(Component)]
 pub struct LeftMover {}
+
+#[derive(Component, Clone, Debug)]
+pub struct Player {}
+
+#[derive(Component, Clone, Debug)]
+pub struct Connected {
+    pub uuid: String,
+}

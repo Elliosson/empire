@@ -44,6 +44,12 @@ fn main() {
     let map = Map::default();
     let pos_to_entity = PositionToTileEntity::default();
 
+    {
+        //TODO make proper register system
+        let mut to_send_guard = to_send.lock().unwrap();
+        to_send_guard.push(format!("register {}", "test"));
+    }
+
     App::new()
         .add_plugins(DefaultPlugins)
         .insert_resource(map)

@@ -20,6 +20,7 @@ pub enum Message {
     SwitchItem(Uuid, u32, u32),
     Destroy(Uuid),
     Action(Uuid, String),
+    Attack(Uuid, i32, i32),
 }
 
 impl Message {
