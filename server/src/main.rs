@@ -45,7 +45,7 @@ impl State {
     }
 }
 
-pub fn FormatMapForClient(map: &Map) -> MapForClient {
+pub fn format_map_for_client(map: &Map) -> MapForClient {
     let mut client_map: MapForClient = MapForClient::default();
 
     for (i, tile) in map.tiles.iter().enumerate() {
@@ -101,7 +101,7 @@ fn main() -> rltk::BError {
     //quickly set something for test
     let mut map_message = MapMessage::default();
     map_message.map = new_map();
-    map_message.map_json = serde_json::to_string(&FormatMapForClient(&map_message.map)).unwrap();
+    map_message.map_json = serde_json::to_string(&format_map_for_client(&map_message.map)).unwrap();
 
     let map_to_send: Arc<Mutex<MapMessage>> = Arc::new(Mutex::new(map_message));
 
