@@ -1,6 +1,7 @@
-use crate::{PlayerInfo, ToSendWrap, UiState};
+use crate::{ToSendWrap, UiState};
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContext};
+use common::PlayerInfo;
 
 pub fn username_ui(
     mut egui_ctx: ResMut<EguiContext>,

@@ -30,3 +30,8 @@ pub struct MapMessage {
 pub struct PlayerInfoMessage {
     pub json: String,
 }
+
+#[derive(Resource, Default, Serialize, Deserialize, Clone)]
+pub struct PlayerInfo {
+    pub gold: f32,
+}

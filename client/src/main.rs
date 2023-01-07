@@ -6,10 +6,9 @@ use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use bevy_egui::EguiPlugin;
 mod components;
 mod network;
-use common::ClientMap;
+use common::{ClientMap, PlayerInfo};
 pub use components::*;
 mod systems;
-use serde::{Deserialize, Serialize};
 pub use systems::*;
 //add default and stuff?
 #[derive(Resource)]
@@ -20,10 +19,7 @@ pub struct DataWrap {
 pub struct ToSendWrap {
     to_send: Arc<Mutex<Vec<String>>>,
 }
-#[derive(Resource, Default, Serialize, Deserialize, Clone)]
-pub struct PlayerInfo {
-    gold: f32,
-}
+
 pub struct Data {
     pub characters: Vec<Point>,
     pub my_uid: String,
@@ -75,7 +71,7 @@ fn main() {
         .insert_resource(UiState::default())
         .insert_resource(PlayerInfo::default())
         .add_startup_system(setup)
-        .add_system(move_camera)
+        .add_system(move_camera_system)
         .add_system(deserialize_map_system)
         .add_system(deserialise_player_info_system)
         .add_system(map_system)
@@ -116,30 +112,4 @@ fn setup(
         transform: Transform::from_translation(Vec3::new(100., 0., 0.)),
         ..default()
     });
-}
-
-fn move_camera(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut transforms: Query<&mut Transform, With<Camera2d>>,
-) {
-    if keyboard_input.pressed(KeyCode::Up) {
-        for mut transform in transforms.iter_mut() {
-            transform.translation.y += 10.;
-        }
-    }
-    if keyboard_input.pressed(KeyCode::Down) {
-        for mut transform in transforms.iter_mut() {
-            transform.translation.y -= 10.;
-        }
-    }
-    if keyboard_input.pressed(KeyCode::Right) {
-        for mut transform in transforms.iter_mut() {
-            transform.translation.x += 10.;
-        }
-    }
-    if keyboard_input.pressed(KeyCode::Left) {
-        for mut transform in transforms.iter_mut() {
-            transform.translation.x -= 10.;
-        }
-    }
 }

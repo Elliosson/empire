@@ -8,3 +8,5 @@ mod ui_system;
 pub use ui_system::*;
 mod deserialize_player_info_system;
 pub use deserialize_player_info_system::deserialise_player_info_system;
+mod move_camera_system;
+pub use move_camera_system::move_camera_system;
