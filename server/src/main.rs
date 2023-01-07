@@ -1,4 +1,4 @@
-use common::{ClientMap, ClientTile, MapMessage};
+use common::MapMessage;
 use rltk::{GameState, Rltk, RGB};
 use specs::prelude::*;
 
@@ -59,22 +59,6 @@ impl State {
         player_info_json.run_now(&self.ecs);
         self.ecs.maintain();
     }
-}
-
-pub fn format_map_for_client(map: &Map) -> ClientMap {
-    let mut client_map: ClientMap = ClientMap::default();
-
-    for (i, tile) in map.tiles.iter().enumerate() {
-        let (x, y) = idx_xy(i);
-        client_map.tiles.push(ClientTile {
-            biome: tile.biome.clone(),
-            x,
-            y,
-            owner: tile.owner.clone(),
-        });
-    }
-
-    return client_map;
 }
 
 fn main() -> rltk::BError {
