@@ -1,5 +1,5 @@
 extern crate specs;
-use crate::{network, Connected, Gold, Map, Player, PlayerInfo, Position, WantToAttack};
+use crate::{network, Connected, GamePhase, Gold, Map, Player, PlayerInfo, Position, WantToAttack};
 
 use specs::prelude::*;
 use std::collections::HashMap;
@@ -23,6 +23,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
         WriteStorage<'a, WantToAttack>,
         WriteStorage<'a, Gold>,
         WriteStorage<'a, PlayerInfo>,
+        WriteStorage<'a, GamePhase>,
         WriteExpect<'a, Map>,
     );
 
@@ -38,6 +39,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             mut want_to_attacks,
             mut golds,
             mut player_infos,
+            mut game_phases,
             map,
         ) = data;
 
@@ -146,6 +148,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     )
                     .with(Gold { quantity: 100. }, &mut golds)
                     .with(PlayerInfo::default(), &mut player_infos)
+                    .with(GamePhase::default(), &mut game_phases)
                     .build();
                 // to_construct.request(
                 //     STARTING_POS_X,
@@ -161,6 +164,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             pseudo_player_hash
                 .hash
                 .insert(pseudo.clone(), player_entity);
+
             player_hash.hash.insert(uid.clone(), player_entity);
         }
     }

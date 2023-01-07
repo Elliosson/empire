@@ -114,6 +114,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Connected>();
     gs.ecs.register::<Player>();
     gs.ecs.register::<PlayerInfo>();
+    gs.ecs.register::<GamePhase>();
 
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {

@@ -20,7 +20,7 @@ impl<'a> System<'a> for GoldGenerationSystem {
         let mut name_to_income: HashMap<String, f32> = HashMap::new();
 
         for tile in map.tiles.iter() {
-            *name_to_income.entry(tile.owner.clone()).or_insert(0.) += 1.;
+            *name_to_income.entry(tile.owner.clone()).or_insert(0.) += 0.001;
         }
 
         for (_entity, player, gold) in (&entities, &mut players, &mut golds).join() {

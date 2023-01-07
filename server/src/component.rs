@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use specs::prelude::*;
 use specs_derive::*;
 
-#[derive(Component, Clone, Debug)]
+#[derive(Component, Clone, Debug, PartialEq, Eq, Hash, Copy)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
@@ -56,4 +56,16 @@ pub struct OnGoingAttack {
 #[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
 pub struct PlayerInfo {
     pub gold: f32,
+}
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub enum GamePhaseEnum {
+    #[default]
+    LocationSelection,
+    Playing,
+    GameOver,
+}
+#[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
+pub struct GamePhase {
+    pub phase: GamePhaseEnum,
 }

@@ -119,4 +119,17 @@ impl Map {
         }
         return &mut self.tiles[idx];
     }
+    pub fn get_tile(&self, position: &Position) -> &Tile {
+        if position.x < 0 || position.y < 0 {
+            //TODO handle this stuff.
+            return &self.tiles[0];
+        }
+        let idx = xy_idx(position.x, position.y);
+        if idx >= self.tiles.len() {
+            println!("Error: request tile out of bound, handle this case");
+            //TODO handle when out of bound stuff are asked.
+            return &self.tiles[0];
+        }
+        return &self.tiles[idx];
+    }
 }
