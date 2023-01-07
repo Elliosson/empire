@@ -1,12 +1,9 @@
 extern crate specs;
-use crate::{network, Connected, GamePhase, Gold, Map, Player, PlayerInfo, Position, WantToAttack};
+use crate::{network, Connected, GamePhase, Gold, Player, PlayerInfo, Position, WantToAttack};
 
 use specs::prelude::*;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
-
-pub const STARTING_POS_X: i32 = 505;
-pub const STARTING_POS_Y: i32 = 505;
 
 pub struct OnlinePlayerSystem {}
 
@@ -17,14 +14,12 @@ impl<'a> System<'a> for OnlinePlayerSystem {
         WriteExpect<'a, UuidPlayerHash>,
         WriteExpect<'a, NamePlayerHash>,
         WriteExpect<'a, Arc<Mutex<Vec<(network::Message, String)>>>>,
-        WriteStorage<'a, Position>,
         WriteStorage<'a, Connected>,
         WriteStorage<'a, Player>,
         WriteStorage<'a, WantToAttack>,
         WriteStorage<'a, Gold>,
         WriteStorage<'a, PlayerInfo>,
         WriteStorage<'a, GamePhase>,
-        WriteExpect<'a, Map>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -33,17 +28,13 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             mut player_hash,
             mut pseudo_player_hash,
             message_mutex,
-            positions,
             mut connecteds,
             mut players,
             mut want_to_attacks,
             mut golds,
             mut player_infos,
             mut game_phases,
-            map,
         ) = data;
-
-        let mut player_messages: Vec<(Entity, network::Message)> = Vec::new();
 
         let mut new_player_list = Vec::new();
 
@@ -57,8 +48,8 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                 // println!("message list: {:?}", net_mes);
                 let mes = net_mes.clone();
 
-                let mut uid = "".to_string();
-                let mut player_entity: Option<&Entity> = None;
+                let uid;
+                let player_entity: Option<&Entity>;
                 match mes.clone() {
                     network::Message::Registered(uuid, name) => {
                         uid = uuid.to_string();
@@ -76,7 +67,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                         uid = uuid.to_string();
                         println!("attack");
                         player_entity = player_hash.hash.get(&uid.clone());
-                        match (player_entity) {
+                        match player_entity {
                             Some(player_entity) => {
                                 want_to_attacks
                                     .insert(
@@ -95,27 +86,6 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     }
 
                     _ => {}
-                }
-
-                match player_entity {
-                    Some(entity) => {
-                        player_messages.push((*entity, mes));
-
-                        // match player_inputs.insert(*entity, PlayerInputComp { input }) {
-                        //     Err(e) => {
-                        //         println!("Error: Can't find the player. {}", e)
-                        //         //TODO if the player have no entity I should either recreate one or suppress the entry from the hashmaps
-                        //     }
-                        //     Ok(_) => {
-                        //         // if we received message of the player he is connected
-                        //         //TODO have a timeout for the deconnection
-                        //         connecteds
-                        //             .insert(*entity, Connected { uuid: uid.clone() })
-                        //             .expect("Unable to insert");
-                        //     }
-                        // }
-                    }
-                    None => {}
                 }
 
                 //todo read the hash map to asociate the uid with an entity
@@ -151,12 +121,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     .with(PlayerInfo::default(), &mut player_infos)
                     .with(GamePhase::default(), &mut game_phases)
                     .build();
-                // to_construct.request(
-                //     STARTING_POS_X,
-                //     STARTING_POS_Y,
-                //     "Online Player".to_string(),
-                //     new_player,
-                // );
+
                 player_entity = new_player;
             }
             connecteds
@@ -168,45 +133,6 @@ impl<'a> System<'a> for OnlinePlayerSystem {
 
             player_hash.hash.insert(uid.clone(), player_entity);
         }
-    }
-}
-
-// fn get_interacted_entity(id: u32, gen: i32, player_info: &PlayerInfo) -> Option<Entity> {
-//     let mut interacted_entity: Option<Entity> = None;
-//     for interaction in player_info.close_interations.iter() {
-//         if id == interaction.index && gen == interaction.generation {
-//             interacted_entity = Some(interaction.entity.unwrap()); // interaction.entity should not be an option but because of serialization shit I have to
-//             break;
-//         }
-//     }
-//     interacted_entity
-// }
-
-// fn get_inventory_entity(id: u32, gen: i32, player_info: &PlayerInfo) -> Option<Entity> {
-//     let mut item_entity: Option<Entity> = None;
-//     for item in player_info.inventaire.iter() {
-//         if id == item.index && gen == item.generation {
-//             item_entity = Some(item.entity.unwrap());
-//             break;
-//         }
-//     }
-//     item_entity
-// }
-
-pub struct PlayerMessages {
-    pub requests: Vec<(Entity, network::Message)>,
-}
-
-impl PlayerMessages {
-    #[allow(clippy::new_without_default)]
-    pub fn new() -> PlayerMessages {
-        PlayerMessages {
-            requests: Vec::new(),
-        }
-    }
-
-    pub fn request(&mut self, player_entity: Entity, message: network::Message) {
-        self.requests.push((player_entity, message));
     }
 }
 

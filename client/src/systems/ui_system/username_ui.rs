@@ -5,8 +5,8 @@ use bevy_egui::{egui, EguiContext};
 pub fn username_ui(
     mut egui_ctx: ResMut<EguiContext>,
     mut ui_state: ResMut<UiState>,
-    mut to_send: ResMut<ToSendWrap>,
-    mut player_info: ResMut<PlayerInfo>,
+    to_send: ResMut<ToSendWrap>,
+    player_info: ResMut<PlayerInfo>,
 ) {
     egui::Window::new("Hello").show(egui_ctx.ctx_mut(), |ui| {
         ui.label("world");

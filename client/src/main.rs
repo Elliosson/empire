@@ -3,7 +3,7 @@
 use std::sync::{Arc, Mutex};
 
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
-use bevy_egui::{egui, EguiContext, EguiPlugin};
+use bevy_egui::EguiPlugin;
 mod components;
 mod network;
 pub use components::*;

@@ -1,6 +1,6 @@
 extern crate specs;
 use crate::map::adjacent_positions;
-use crate::{idx_xy, Map, MapForClient, MapMessage, OnGoingAttack, Position, Tile, TileForClient};
+use crate::{idx_xy, Map, MapForClient, MapMessage, OnGoingAttack, Tile, TileForClient};
 use specs::prelude::*;
 use std::{
     collections::HashSet,
@@ -19,7 +19,7 @@ impl<'a> System<'a> for OngoingAttackSystem {
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (entities, mut ongoing_attacks, mut map, mut map_to_send) = data;
+        let (entities, mut ongoing_attacks, mut map, map_to_send) = data;
 
         let mut to_delete = HashSet::new();
         for (entity, ongoing_attack) in (&entities, &mut ongoing_attacks).join() {

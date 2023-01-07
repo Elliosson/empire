@@ -1,6 +1,5 @@
-use crate::{Data, DataWrap, PlayerInfo};
+use crate::{DataWrap, PlayerInfo};
 use bevy::prelude::*;
-use std::sync::{Arc, Mutex};
 
 pub fn deserialise_player_info_system(
     from_net_data: Res<DataWrap>,

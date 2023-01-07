@@ -5,22 +5,9 @@ pub enum Message {
     Register(String),
     Registered(Uuid, String),
     Play(Uuid),
-    Positions(Uuid),
-    UP(Uuid),
-    DOWN(Uuid),
-    RIGHT(Uuid),
-    LEFT(Uuid),
-    Exit(Uuid),
     Map(Uuid),
-    PickUp(Uuid),
-    Interact(Uuid, String, u32, i32), //x, y, name, id, gen
-    Consume(Uuid, u32, i32),          //id, gen
     PlayerInfo(Uuid),
-    Build(Uuid, i32, i32, String),
-    SwitchItem(Uuid, u32, u32),
-    Destroy(Uuid),
-    Action(Uuid, String),
-    Attack(Uuid, i32, i32, i32),
+    Attack(Uuid, i32, i32, i32), // uuid, x, y, percent
 }
 
 impl Message {

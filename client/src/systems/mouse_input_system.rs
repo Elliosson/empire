@@ -4,7 +4,6 @@ use bevy::input::mouse::*;
 use bevy::input::ButtonState;
 use bevy::prelude::*;
 use bevy::render::camera::Camera;
-use bevy_egui::egui::Ui;
 
 pub fn mouse_input_system(
     windows: Res<Windows>,
@@ -16,14 +15,13 @@ pub fn mouse_input_system(
 ) {
     let mut to_send_guard = to_send.to_send.lock().unwrap();
     let data_guard = net_data.protected_data.lock().unwrap();
-    let uid = data_guard.my_uid.clone();
 
     //get the camera pos
     //todo proprement avec id connue de la main camera
     let mut camera_pos_x = 0.;
     let mut camera_pos_y = 0.;
 
-    for (camera, transform) in query_camera.iter() {
+    for (_camera, transform) in query_camera.iter() {
         let translation = &transform.translation;
 
         camera_pos_x = translation.x;
