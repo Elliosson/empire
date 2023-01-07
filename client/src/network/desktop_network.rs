@@ -1,6 +1,6 @@
 extern crate websocket;
 
-use std::sync::mpsc::channel;
+use std::sync::mpsc::{channel, TryRecvError};
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
 
@@ -29,6 +29,7 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
     let (mut receiver, mut sender) = client.split().unwrap();
 
     let (tx, rx): (Sender<OwnedMessage>, Receiver<OwnedMessage>) = channel();
+    let (asker_tx, asker_rx): (Sender<String>, Receiver<String>) = channel();
 
     let tx_1 = tx.clone();
 
@@ -116,13 +117,9 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
                         message_sender.clone(),
                     ) {
                         Some((general_network::Message::Play(uid), _)) => {
-                            let message_sender2 = message_sender.clone();
-                            // this closure will regulary send request to the server
-                            let _q = thread::spawn(move || loop {
-                                message_sender2(uid.clone(), "map".to_string());
-                                message_sender2(uid.clone(), "player_info".to_string());
-                                thread::sleep(Duration::from_millis(100));
-                            });
+                            asker_tx
+                                .send(uid)
+                                .expect("Unable to send message to channel");
                         }
                         _ => {}
                     }
@@ -133,35 +130,32 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
             }
         }
     });
-    /*
-    loop {
-        let mut input = String::new();
-        stdin().read_line(&mut input).unwrap();
-        let trimmed = input.trim();
-        let message = match trimmed {
-            "/close" => {
-                // Close the connection
-                let _ = tx.send(OwnedMessage::Close(None));
-                break;
+
+    let tx_4 = tx.clone();
+    let message_sender = move |uid, message| {
+        tx_4.send(OwnedMessage::Text(format!("{} {}", uid, message)))
+            .expect("Unable to send message to channel");
+    };
+    //thread that periodically ask basic stuff like player info and the map
+    let _asker_loop = thread::spawn(move || {
+        let mut maybe_uuid = None;
+
+        loop {
+            //update uuid
+            match asker_rx.try_recv() {
+                Ok(new_uuid) => {
+                    println!("Change uuid.");
+                    maybe_uuid = Some(new_uuid);
+                }
+                Err(TryRecvError::Empty) => {}
+                Err(TryRecvError::Disconnected) => break,
             }
-            // Send a ping
-            "/ping" => OwnedMessage::Ping(b"PING".to_vec()),
-            // Otherwise, just send text
-            _ => OwnedMessage::Text(trimmed.to_string()),
-        };
-        match tx.send(message) {
-            Ok(()) => (),
-            Err(e) => {
-                println!("Main Loop: {:?}", e);
-                break;
+
+            if let Some(uuid) = &maybe_uuid {
+                message_sender(uuid.clone(), "map".to_string());
+                message_sender(uuid.clone(), "player_info".to_string());
             }
+            thread::sleep(Duration::from_millis(100));
         }
-    }
-    // We're exiting
-    println!("Waiting for child threads to exit");
-    let _ = to_send_loop.join();
-    let _ = send_loop.join();
-    let _ = receive_loop.join();
-    println!("Exited");
-    */
+    });
 }
