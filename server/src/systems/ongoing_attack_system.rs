@@ -48,9 +48,7 @@ impl<'a> System<'a> for OngoingAttackSystem {
         }
 
         let mut map_to_send_guard = map_to_send.lock().unwrap();
-        map_to_send_guard.map = map.clone();
-        map_to_send_guard.map_json =
-            serde_json::to_string(&format_map_for_client(&map_to_send_guard.map)).unwrap();
+        map_to_send_guard.map_json = serde_json::to_string(&format_map_for_client(&map)).unwrap();
     }
 }
 

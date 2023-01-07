@@ -1,4 +1,4 @@
-use common::{ClientMap, ClientTile};
+use common::{ClientMap, ClientTile, MapMessage};
 use rltk::{GameState, Rltk, RGB};
 use specs::prelude::*;
 
@@ -10,7 +10,6 @@ mod left_walker_system;
 pub use left_walker_system::*;
 mod network;
 use network::Config;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -78,16 +77,6 @@ pub fn format_map_for_client(map: &Map) -> ClientMap {
     return client_map;
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct MapMessage {
-    pub map: Map,
-    pub map_json: String,
-}
-
-pub struct PlayerInfoMessage {
-    pub json: String,
-}
-
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50().with_title("Sumerian").build()?;
@@ -118,10 +107,7 @@ fn main() -> rltk::BError {
     let message_list: Arc<Mutex<Vec<(network::Message, String)>>> =
         Arc::new(Mutex::new(Vec::new()));
 
-    //quickly set something for test
-    let mut map_message = MapMessage::default();
-    map_message.map = new_map();
-    map_message.map_json = serde_json::to_string(&format_map_for_client(&map_message.map)).unwrap();
+    let map_message = MapMessage::default();
 
     let map_to_send: Arc<Mutex<MapMessage>> = Arc::new(Mutex::new(map_message));
 
