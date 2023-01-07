@@ -1,10 +1,13 @@
 extern crate specs;
 use std::collections::{HashSet, VecDeque};
 
-use crate::{GamePhase, GamePhaseEnum, Gold, Map, OnGoingAttack, Player, Position, WantToAttack};
+use crate::{
+    is_inside_map, GamePhase, GamePhaseEnum, Gold, Map, OnGoingAttack, Player, Position,
+    WantToAttack,
+};
 use specs::prelude::*;
 
-use super::ongoing_attack_system::adjacent_positions;
+use crate::map::adjacent_positions;
 
 pub struct AttackSystem {}
 
@@ -64,22 +67,24 @@ impl<'a> System<'a> for AttackSystem {
                     }
                 }
                 GamePhaseEnum::LocationSelection => {
-                    println!("initial attack {:?}", want_to_attack.pos);
+                    if is_inside_map(want_to_attack.pos) {
+                        println!("initial attack {:?}", want_to_attack.pos);
 
-                    entities
-                        .build_entity()
-                        .with(
-                            OnGoingAttack {
-                                gold: gold.quantity,
-                                last_turn_conquest: vec![want_to_attack.pos.clone()],
-                                owner: player.name.clone(),
-                                enemy: None,
-                            },
-                            &mut ongoing_attacks,
-                        )
-                        .build();
-                    gold.quantity = 0.;
-                    game_phase.phase = GamePhaseEnum::Playing;
+                        entities
+                            .build_entity()
+                            .with(
+                                OnGoingAttack {
+                                    gold: gold.quantity,
+                                    last_turn_conquest: vec![want_to_attack.pos.clone()],
+                                    owner: player.name.clone(),
+                                    enemy: None,
+                                },
+                                &mut ongoing_attacks,
+                            )
+                            .build();
+                        gold.quantity = 0.;
+                        game_phase.phase = GamePhaseEnum::Playing;
+                    }
                 }
                 GamePhaseEnum::GameOver => {}
             }

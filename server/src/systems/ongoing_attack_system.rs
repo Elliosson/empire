@@ -1,11 +1,11 @@
 extern crate specs;
+use crate::map::adjacent_positions;
+use crate::{idx_xy, Map, MapForClient, MapMessage, OnGoingAttack, Position, Tile, TileForClient};
+use specs::prelude::*;
 use std::{
     collections::HashSet,
     sync::{Arc, Mutex},
 };
-
-use crate::{idx_xy, Map, MapForClient, MapMessage, OnGoingAttack, Position, Tile, TileForClient};
-use specs::prelude::*;
 
 pub struct OngoingAttackSystem {}
 
@@ -50,17 +50,6 @@ impl<'a> System<'a> for OngoingAttackSystem {
         map_to_send_guard.map_json =
             serde_json::to_string(&format_map_for_client(&map_to_send_guard.map)).unwrap();
     }
-}
-
-pub fn adjacent_positions(pos: &Position) -> Vec<Position> {
-    let x = pos.x;
-    let y = pos.y;
-    return vec![
-        Position::new(x, y - 1),
-        Position::new(x, y + 1),
-        Position::new(x - 1, y),
-        Position::new(x + 1, y),
-    ];
 }
 
 pub fn format_map_for_client(map: &Map) -> MapForClient {

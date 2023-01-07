@@ -2,6 +2,9 @@ use crate::Position;
 use rltk::{Rltk, RGB};
 use serde::{Deserialize, Serialize};
 
+pub const MAPWIDTH: i32 = 80;
+pub const MAPHEIGHT: i32 = 50;
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub enum Biome {
     #[default]
@@ -22,36 +25,36 @@ pub struct Map {
 }
 
 pub fn xy_idx(x: i32, y: i32) -> usize {
-    (y as usize * 80) + x as usize
+    (y * MAPWIDTH + x) as usize
 }
 
 pub fn idx_xy(idx: usize) -> (i32, i32) {
-    let x = (idx % 80) as i32;
-    let y = (idx / 80) as i32;
+    let x = (idx % MAPWIDTH as usize) as i32;
+    let y = (idx / MAPWIDTH as usize) as i32;
 
     return (x, y);
 }
 
 pub fn new_map() -> Map {
     let mut map = Map::default();
-    map.tiles = vec![Tile::default(); 80 * 50];
+    map.tiles = vec![Tile::default(); MAPWIDTH as usize * 50];
 
     // Make the boundaries mountain
-    for x in 0..80 {
+    for x in 0..MAPWIDTH {
         map.tiles[xy_idx(x, 0)].biome = Biome::Mountain;
-        map.tiles[xy_idx(x, 49)].biome = Biome::Mountain;
+        map.tiles[xy_idx(x, MAPHEIGHT - 1)].biome = Biome::Mountain;
     }
-    for y in 0..50 {
+    for y in 0..MAPHEIGHT {
         map.tiles[xy_idx(0, y)].biome = Biome::Mountain;
-        map.tiles[xy_idx(79, y)].biome = Biome::Mountain;
+        map.tiles[xy_idx(MAPWIDTH - 1, y)].biome = Biome::Mountain;
     }
 
     // Now we'll randomly splat a bunch of desert.
     let mut rng = rltk::RandomNumberGenerator::new();
 
     for _i in 0..400 {
-        let x = rng.roll_dice(1, 79);
-        let y = rng.roll_dice(1, 49);
+        let x = rng.roll_dice(1, MAPWIDTH - 1);
+        let y = rng.roll_dice(1, MAPHEIGHT - 1);
         let idx = xy_idx(x, y);
         if idx != xy_idx(40, 25) {
             map.tiles[idx].biome = Biome::Desert;
@@ -132,4 +135,25 @@ impl Map {
         }
         return &self.tiles[idx];
     }
+}
+
+pub fn adjacent_positions(pos: &Position) -> Vec<Position> {
+    let x = pos.x;
+    let y = pos.y;
+
+    let mut result = vec![
+        Position::new(x, y - 1),
+        Position::new(x, y + 1),
+        Position::new(x - 1, y),
+        Position::new(x + 1, y),
+    ];
+    result.retain(|&x| is_inside_map(x));
+    return result;
+}
+
+pub fn is_inside_map(pos: Position) -> bool {
+    if pos.x < 0 || pos.x >= MAPWIDTH || pos.y < 0 || pos.y >= MAPHEIGHT {
+        return false;
+    }
+    return true;
 }
