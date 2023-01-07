@@ -44,11 +44,14 @@ impl<'a> System<'a> for AttackSystem {
                 GamePhaseEnum::Playing => {
                     match get_closest_border(&want_to_attack.pos, &player.name, &map) {
                         Ok(border_pos) => {
+                            let gold_cost =
+                                gold.quantity * (want_to_attack.gold_percent as f32 / 100.);
+                            gold.quantity -= gold_cost;
                             entities
                                 .build_entity()
                                 .with(
                                     OnGoingAttack {
-                                        gold: gold.quantity,
+                                        gold: gold_cost,
                                         last_turn_conquest: vec![border_pos],
                                         owner: player.name.clone(),
                                         enemy: None,
@@ -56,13 +59,13 @@ impl<'a> System<'a> for AttackSystem {
                                     &mut ongoing_attacks,
                                 )
                                 .build();
-                            gold.quantity = 0.;
                         }
                         Err(_) => {}
                     }
                 }
                 GamePhaseEnum::LocationSelection => {
-                    println!("attack {:?}", want_to_attack.pos);
+                    println!("initial attack {:?}", want_to_attack.pos);
+
                     entities
                         .build_entity()
                         .with(

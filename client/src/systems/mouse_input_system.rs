@@ -1,14 +1,17 @@
+use crate::UiState;
 use crate::{DataWrap, ToSendWrap};
 use bevy::input::mouse::*;
 use bevy::input::ButtonState;
 use bevy::prelude::*;
 use bevy::render::camera::Camera;
+use bevy_egui::egui::Ui;
 
 pub fn mouse_input_system(
     windows: Res<Windows>,
     mut mouse_button_input_events: EventReader<MouseButtonInput>,
     to_send: ResMut<ToSendWrap>,
     net_data: ResMut<DataWrap>,
+    ui_state: Res<UiState>,
     query_camera: Query<(&Camera, &Transform), With<Camera2d>>,
 ) {
     let mut to_send_guard = to_send.to_send.lock().unwrap();
@@ -49,7 +52,10 @@ pub fn mouse_input_system(
                     let x = coord.0 as i32 / 10;
                     let y = coord.1 as i32 / 10;
 
-                    to_send_guard.push(format!("{} {} {} {}", data_guard.my_uid, "attack", x, y))
+                    to_send_guard.push(format!(
+                        "{} {} {} {} {}",
+                        data_guard.my_uid, "attack", x, y, ui_state.gold_percent
+                    ))
                 }
                 _ => {}
             }

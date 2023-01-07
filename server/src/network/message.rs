@@ -20,7 +20,7 @@ pub enum Message {
     SwitchItem(Uuid, u32, u32),
     Destroy(Uuid),
     Action(Uuid, String),
-    Attack(Uuid, i32, i32),
+    Attack(Uuid, i32, i32, i32),
 }
 
 impl Message {
@@ -46,8 +46,9 @@ impl Message {
                     let message: Vec<&str> = parts.collect();
                     let x: i32 = message[0].parse().unwrap();
                     let y: i32 = message[1].parse().unwrap();
+                    let percent: i32 = message[2].parse().unwrap();
                     //println!("attack {} {}", x, y);
-                    Some(Message::Attack(id, x, y))
+                    Some(Message::Attack(id, x, y, percent))
                 }
                 "player_info" => Some(Message::PlayerInfo(id)),
 

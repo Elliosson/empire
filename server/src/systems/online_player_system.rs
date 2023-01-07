@@ -72,7 +72,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                             }
                         }
                     }
-                    network::Message::Attack(uuid, x, y) => {
+                    network::Message::Attack(uuid, x, y, percent) => {
                         uid = uuid.to_string();
                         println!("attack");
                         player_entity = player_hash.hash.get(&uid.clone());
@@ -83,6 +83,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                                         *player_entity,
                                         WantToAttack {
                                             pos: Position::new(x, y),
+                                            gold_percent: percent,
                                         },
                                     )
                                     .unwrap();

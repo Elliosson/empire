@@ -43,6 +43,7 @@ pub struct Gold {
 #[derive(Component, Clone, Debug)]
 pub struct WantToAttack {
     pub pos: Position,
+    pub gold_percent: i32,
 }
 
 #[derive(Component, Clone, Debug)]
