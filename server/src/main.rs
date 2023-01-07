@@ -1,13 +1,11 @@
 use common::MapMessage;
-use rltk::{GameState, Rltk, RGB};
+use rltk::{GameState, Rltk};
 use specs::prelude::*;
 
 mod map;
 pub use map::*;
 mod component;
 pub use component::*;
-mod left_walker_system;
-pub use left_walker_system::*;
 mod network;
 use network::Config;
 use std::collections::HashMap;
@@ -41,8 +39,6 @@ impl GameState for State {
 
 impl State {
     fn run_systems(&mut self) {
-        let mut lw = LeftWalker {};
-        lw.run_now(&self.ecs);
         let mut online_player = OnlinePlayerSystem {};
         online_player.run_now(&self.ecs);
         let mut attack = AttackSystem {};
@@ -71,7 +67,6 @@ fn main() -> rltk::BError {
 
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
-    gs.ecs.register::<LeftMover>();
     gs.ecs.register::<OnGoingAttack>();
     gs.ecs.register::<WantToAttack>();
     gs.ecs.register::<Gold>();
@@ -99,26 +94,12 @@ fn main() -> rltk::BError {
         Arc::new(Mutex::new(HashMap::new()));
 
     gs.ecs.insert(message_list.clone());
-
     gs.ecs.insert(map_to_send.clone());
     gs.ecs.insert(player_info_to_send.clone());
 
     thread::spawn(move || {
         network::run(config, message_list, map_to_send, player_info_to_send);
     });
-
-    for i in 0..10 {
-        gs.ecs
-            .create_entity()
-            .with(Position { x: i * 7, y: 20 })
-            .with(Renderable {
-                glyph: rltk::to_cp437('☺'),
-                fg: RGB::named(rltk::RED),
-                bg: RGB::named(rltk::BLACK),
-            })
-            .with(LeftMover {})
-            .build();
-    }
 
     rltk::main_loop(context, gs)
 }

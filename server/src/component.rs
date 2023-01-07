@@ -22,9 +22,6 @@ pub struct Renderable {
     pub bg: RGB,
 }
 
-#[derive(Component)]
-pub struct LeftMover {}
-
 #[derive(Component, Clone, Debug)]
 pub struct Player {
     pub name: String,
