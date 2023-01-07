@@ -6,3 +6,5 @@ mod mouse_input_system;
 pub use mouse_input_system::mouse_input_system;
 mod ui_system;
 pub use ui_system::*;
+mod deserialize_player_info_system;
+pub use deserialize_player_info_system::deserialise_player_info_system;

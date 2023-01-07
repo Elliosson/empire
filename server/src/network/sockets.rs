@@ -73,7 +73,7 @@ fn response(
     player_info_to_send: Arc<Mutex<HashMap<String, String>>>,
 ) -> (String, Message) {
     let map_guard = map_to_send.lock().unwrap();
-    let _player_info_guard = player_info_to_send.lock().unwrap();
+    let player_info_guard = player_info_to_send.lock().unwrap();
 
     match msg {
         //this is very tricky because since the uuid is created here we don't return the same message that the on we received
@@ -83,6 +83,13 @@ fn response(
             (uuid.to_string(), Message::Registered(uuid, name))
         }
         Message::Map(_uuid) => (map_guard.map_json.clone(), msg),
+        Message::PlayerInfo(uuid) => {
+            if let Some(my_player_info) = player_info_guard.get(&uuid.to_string()) {
+                (my_player_info.clone(), msg) // my_player_info is a string
+            } else {
+                ("nok".to_string(), msg)
+            }
+        }
         _ => ("ok".to_string(), msg),
     }
 }

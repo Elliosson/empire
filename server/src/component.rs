@@ -1,4 +1,5 @@
 use rltk::RGB;
+use serde::{Deserialize, Serialize};
 use specs::prelude::*;
 use specs_derive::*;
 
@@ -50,4 +51,9 @@ pub struct OnGoingAttack {
     pub last_turn_conquest: Vec<Position>,
     pub owner: String,
     pub enemy: Option<String>,
+}
+
+#[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
+pub struct PlayerInfo {
+    pub gold: f32,
 }

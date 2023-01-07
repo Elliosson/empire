@@ -6,6 +6,7 @@ pub enum Message {
     Play(String),
     Config,
     Map,
+    PlayerInfo,
     Unknown,
 }
 
@@ -54,6 +55,14 @@ where
 
             data_guard.map_string = map;
             Message::Map
+        }
+        "player_info" => {
+            let mut data_guard = data.lock().unwrap();
+
+            let info: String = parts.collect::<String>();
+
+            data_guard.info_string = info;
+            Message::PlayerInfo
         }
         _ => Message::Unknown,
     };

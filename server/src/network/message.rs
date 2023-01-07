@@ -49,6 +49,7 @@ impl Message {
                     //println!("attack {} {}", x, y);
                     Some(Message::Attack(id, x, y))
                 }
+                "player_info" => Some(Message::PlayerInfo(id)),
 
                 _ => None,
             };

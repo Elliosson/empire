@@ -51,6 +51,10 @@ impl State {
         ongoing_attack.run_now(&self.ecs);
         let mut gold_generation = GoldGenerationSystem {};
         gold_generation.run_now(&self.ecs);
+        let mut player_info = PlayerInfoSystem {};
+        player_info.run_now(&self.ecs);
+        let mut player_info_json = PlayerInfoJsonSystem {};
+        player_info_json.run_now(&self.ecs);
         self.ecs.maintain();
     }
 }
@@ -89,6 +93,10 @@ pub struct MapMessage {
     pub map_json: String,
 }
 
+pub struct PlayerInfoMessage {
+    pub json: String,
+}
+
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
     let context = RltkBuilder::simple80x50().with_title("Sumerian").build()?;
@@ -105,6 +113,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Gold>();
     gs.ecs.register::<Connected>();
     gs.ecs.register::<Player>();
+    gs.ecs.register::<PlayerInfo>();
 
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {

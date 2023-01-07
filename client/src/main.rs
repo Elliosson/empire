@@ -8,6 +8,7 @@ mod components;
 mod network;
 pub use components::*;
 mod systems;
+use serde::{Deserialize, Serialize};
 pub use systems::*;
 //add default and stuff?
 #[derive(Resource)]
@@ -17,6 +18,10 @@ pub struct DataWrap {
 #[derive(Resource)]
 pub struct ToSendWrap {
     to_send: Arc<Mutex<Vec<String>>>,
+}
+#[derive(Resource, Default, Serialize, Deserialize, Clone)]
+pub struct PlayerInfo {
+    gold: f32,
 }
 pub struct Data {
     pub characters: Vec<Point>,
@@ -67,9 +72,11 @@ fn main() {
         .insert_resource(pos_to_entity)
         .insert_resource(to_send_wrap)
         .insert_resource(UiState::default())
+        .insert_resource(PlayerInfo::default())
         .add_startup_system(setup)
         .add_system(move_camera)
         .add_system(deserialize_map_system)
+        .add_system(deserialise_player_info_system)
         .add_system(map_system)
         .add_system(mouse_input_system)
         .add_system(username_ui)

@@ -1,4 +1,4 @@
-use crate::{ToSendWrap, UiState};
+use crate::{PlayerInfo, ToSendWrap, UiState};
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContext};
 
@@ -6,6 +6,7 @@ pub fn username_ui(
     mut egui_ctx: ResMut<EguiContext>,
     mut ui_state: ResMut<UiState>,
     mut to_send: ResMut<ToSendWrap>,
+    mut player_info: ResMut<PlayerInfo>,
 ) {
     egui::Window::new("Hello").show(egui_ctx.ctx_mut(), |ui| {
         ui.label("world");
@@ -21,6 +22,8 @@ pub fn username_ui(
                 }
             }
         });
+
+        ui.label(format!("Gold: {} ", player_info.gold));
 
         ui.add(egui::Slider::new(&mut ui_state.gold_percent, 0..=100).text("attack percentage"));
         if ui.button("Increment").clicked() {
