@@ -51,6 +51,8 @@ impl State {
         ongoing_attack.run_now(&self.ecs);
         let mut gold_generation = GoldGenerationSystem {};
         gold_generation.run_now(&self.ecs);
+        let mut defeat = DefeatSystem {};
+        defeat.run_now(&self.ecs);
         let mut player_info = PlayerInfoSystem {};
         player_info.run_now(&self.ecs);
         let mut player_info_json = PlayerInfoJsonSystem {};

@@ -65,7 +65,6 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     }
                     network::Message::Attack(uuid, x, y, percent) => {
                         uid = uuid.to_string();
-                        println!("attack");
                         player_entity = player_hash.hash.get(&uid.clone());
                         match player_entity {
                             Some(player_entity) => {

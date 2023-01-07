@@ -59,7 +59,7 @@ pub struct PlayerInfo {
     pub gold: f32,
 }
 
-#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub enum GamePhaseEnum {
     #[default]
     LocationSelection,

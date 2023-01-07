@@ -10,3 +10,5 @@ mod player_info_json_system;
 pub use player_info_json_system::PlayerInfoJsonSystem;
 mod player_info_system;
 pub use player_info_system::PlayerInfoSystem;
+mod defeat_system;
+pub use defeat_system::DefeatSystem;
