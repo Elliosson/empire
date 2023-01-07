@@ -6,6 +6,7 @@ use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 use bevy_egui::EguiPlugin;
 mod components;
 mod network;
+use common::ClientMap;
 pub use components::*;
 mod systems;
 use serde::{Deserialize, Serialize};
@@ -55,7 +56,7 @@ fn main() {
         to_send: to_send.clone(),
     };
 
-    let map = Map::default();
+    let map = ClientMap::default();
     let pos_to_entity = PositionToTileEntity::default();
 
     {

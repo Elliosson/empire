@@ -1,11 +1,12 @@
-use crate::{Biome, Map, PositionToTileEntity};
+use crate::PositionToTileEntity;
 use bevy::prelude::*;
+use common::{Biome, ClientMap};
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
 pub fn map_system(
     mut commands: Commands,
-    map: Res<Map>,
+    map: Res<ClientMap>,
     mut pos_to_tile_entity: ResMut<PositionToTileEntity>,
     mut sprite_query: Query<&mut Sprite>,
 ) {

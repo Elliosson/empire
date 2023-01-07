@@ -1,6 +1,8 @@
 extern crate specs;
 use crate::map::adjacent_positions;
-use crate::{idx_xy, Map, MapForClient, MapMessage, OnGoingAttack, Tile, TileForClient};
+use crate::{idx_xy, Map, MapMessage, OnGoingAttack, Tile};
+pub use common::ClientMap;
+use common::ClientTile;
 use specs::prelude::*;
 use std::{
     collections::HashSet,
@@ -52,12 +54,12 @@ impl<'a> System<'a> for OngoingAttackSystem {
     }
 }
 
-pub fn format_map_for_client(map: &Map) -> MapForClient {
-    let mut client_map: MapForClient = MapForClient::default();
+pub fn format_map_for_client(map: &Map) -> ClientMap {
+    let mut client_map: ClientMap = ClientMap::default();
 
     for (i, tile) in map.tiles.iter().enumerate() {
         let (x, y) = idx_xy(i);
-        client_map.tiles.push(TileForClient {
+        client_map.tiles.push(ClientTile {
             biome: tile.biome.clone(),
             x,
             y,

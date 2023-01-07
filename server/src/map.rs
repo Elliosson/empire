@@ -1,18 +1,11 @@
 use crate::Position;
+use common::Biome;
 use rltk::{Rltk, RGB};
 use serde::{Deserialize, Serialize};
 
 pub const MAPWIDTH: i32 = 80;
 pub const MAPHEIGHT: i32 = 50;
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub enum Biome {
-    #[default]
-    Plain,
-    Forest,
-    Desert,
-    Mountain,
-}
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct Tile {
     pub biome: Biome,

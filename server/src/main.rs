@@ -1,3 +1,4 @@
+use common::{ClientMap, ClientTile};
 use rltk::{GameState, Rltk, RGB};
 use specs::prelude::*;
 
@@ -61,12 +62,12 @@ impl State {
     }
 }
 
-pub fn format_map_for_client(map: &Map) -> MapForClient {
-    let mut client_map: MapForClient = MapForClient::default();
+pub fn format_map_for_client(map: &Map) -> ClientMap {
+    let mut client_map: ClientMap = ClientMap::default();
 
     for (i, tile) in map.tiles.iter().enumerate() {
         let (x, y) = idx_xy(i);
-        client_map.tiles.push(TileForClient {
+        client_map.tiles.push(ClientTile {
             biome: tile.biome.clone(),
             x,
             y,
@@ -77,18 +78,6 @@ pub fn format_map_for_client(map: &Map) -> MapForClient {
     return client_map;
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct TileForClient {
-    pub biome: Biome,
-    pub x: i32,
-    pub y: i32,
-    pub owner: String,
-}
-
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-pub struct MapForClient {
-    pub tiles: Vec<TileForClient>,
-}
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct MapMessage {
     pub map: Map,
