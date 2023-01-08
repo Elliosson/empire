@@ -31,33 +31,35 @@ pub fn mouse_input_system(
                     let window = windows.get_primary().unwrap();
                     let mouse_pos = window.cursor_position().unwrap();
 
-                    println!("event: {:?} position: {:?}", event, mouse_pos);
+                    if mouse_pos.x > 300. {
+                        println!("event: {:?} position: {:?}", event, mouse_pos);
 
-                    //pos is in pixel in the screen, need to be transform in equivalent in transform
-                    //convert the click in tile pos
+                        //pos is in pixel in the screen, need to be transform in equivalent in transform
+                        //convert the click in tile pos
 
-                    let coord = screen_coord_to_world_coord(
-                        &windows,
-                        camera_pos_x,
-                        camera_pos_y,
-                        mouse_pos.x,
-                        mouse_pos.y,
-                    );
-                    let x = coord.0 as i32 / 10;
-                    let y = coord.1 as i32 / 10;
+                        let coord = screen_coord_to_world_coord(
+                            &windows,
+                            camera_pos_x,
+                            camera_pos_y,
+                            mouse_pos.x,
+                            mouse_pos.y,
+                        );
+                        let x = coord.0 as i32 / 10;
+                        let y = coord.1 as i32 / 10;
 
-                    if !ui_state.attack_ui_open {
-                        map_click.map_pos = Point {
-                            x: x as f32,
-                            y: y as f32,
-                        };
-                        map_click.screen_pos = Point {
-                            x: mouse_pos.x as f32,
-                            y: mouse_pos.y as f32,
-                        };
-                        ui_state.attack_ui_open = true;
-                    } else {
-                        ui_state.attack_ui_open = false;
+                        if !ui_state.attack_ui_open {
+                            map_click.map_pos = Point {
+                                x: x as f32,
+                                y: y as f32,
+                            };
+                            map_click.screen_pos = Point {
+                                x: mouse_pos.x as f32,
+                                y: mouse_pos.y as f32,
+                            };
+                            ui_state.attack_ui_open = true;
+                        } else {
+                            ui_state.attack_ui_open = false;
+                        }
                     }
                 }
                 _ => {}

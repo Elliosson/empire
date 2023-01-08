@@ -10,11 +10,11 @@ pub fn username_ui(
     player_info: ResMut<PlayerInfo>,
 ) {
     egui::SidePanel::left("Hello")
-        .default_width(100.0)
+        .exact_width(300.)
         .show(egui_ctx.ctx_mut(), |ui| {
             ui.label("world");
 
-            ui.horizontal(|ui| {
+            ui.vertical(|ui| {
                 ui.label("Your username: ");
                 ui.text_edit_singleline(&mut ui_state.username);
                 if ui.button("Confirm").clicked() {
