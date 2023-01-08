@@ -24,8 +24,8 @@ pub fn attack_ui(
     if ui_state.attack_ui_open {
         egui::Area::new("attack area")
             .current_pos([
-                map_click.screen_pos.x,
-                window.height() - map_click.screen_pos.y,
+                map_click.screen_pos.x - 10.,
+                window.height() - map_click.screen_pos.y - 10.,
             ])
             .show(egui_ctx.ctx_mut(), |ui| {
                 if ui.button("Attack").clicked() {
