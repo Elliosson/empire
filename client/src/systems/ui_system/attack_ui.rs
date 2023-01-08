@@ -7,7 +7,7 @@ use bevy_egui::{
 
 pub fn attack_ui(
     mut egui_ctx: ResMut<EguiContext>,
-    ui_state: ResMut<UiState>,
+    mut ui_state: ResMut<UiState>,
     to_send: ResMut<ToSendWrap>,
     map_click: ResMut<MapClick>,
     net_data: ResMut<DataWrap>,
@@ -39,7 +39,8 @@ pub fn attack_ui(
                             map_click.map_pos.x,
                             map_click.map_pos.y,
                             ui_state.gold_percent
-                        ))
+                        ));
+                        ui_state.attack_ui_open = false;
                     }
                 }
             });

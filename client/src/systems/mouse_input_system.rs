@@ -31,6 +31,7 @@ pub fn mouse_input_system(
                     let window = windows.get_primary().unwrap();
                     let mouse_pos = window.cursor_position().unwrap();
 
+                    //ignore click in the side panel area.
                     if mouse_pos.x > 300. {
                         println!("event: {:?} position: {:?}", event, mouse_pos);
 
@@ -57,10 +58,11 @@ pub fn mouse_input_system(
                                 y: mouse_pos.y as f32,
                             };
                             ui_state.attack_ui_open = true;
-                        } else {
-                            ui_state.attack_ui_open = false;
                         }
                     }
+                }
+                MouseButton::Right => {
+                    ui_state.attack_ui_open = false;
                 }
                 _ => {}
             }
