@@ -70,6 +70,7 @@ fn main() {
         .insert_resource(to_send_wrap)
         .insert_resource(UiState::default())
         .insert_resource(PlayerInfo::default())
+        .insert_resource(MapClick::default())
         .add_startup_system(setup)
         .add_system(move_camera_system)
         .add_system(deserialize_map_system)
@@ -77,6 +78,7 @@ fn main() {
         .add_system(map_system)
         .add_system(mouse_input_system)
         .add_system(username_ui)
+        .add_system(attack_ui)
         .run();
 }
 

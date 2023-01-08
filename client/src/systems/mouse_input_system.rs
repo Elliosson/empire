@@ -1,5 +1,5 @@
-use crate::UiState;
-use crate::{DataWrap, ToSendWrap};
+use crate::Point;
+use crate::{MapClick, UiState};
 use bevy::input::mouse::*;
 use bevy::input::ButtonState;
 use bevy::prelude::*;
@@ -8,14 +8,10 @@ use bevy::render::camera::Camera;
 pub fn mouse_input_system(
     windows: Res<Windows>,
     mut mouse_button_input_events: EventReader<MouseButtonInput>,
-    to_send: ResMut<ToSendWrap>,
-    net_data: ResMut<DataWrap>,
-    ui_state: Res<UiState>,
+    mut ui_state: ResMut<UiState>,
+    mut map_click: ResMut<MapClick>,
     query_camera: Query<(&Camera, &Transform), With<Camera2d>>,
 ) {
-    let mut to_send_guard = to_send.to_send.lock().unwrap();
-    let data_guard = net_data.protected_data.lock().unwrap();
-
     //get the camera pos
     //todo proprement avec id connue de la main camera
     let mut camera_pos_x = 0.;
@@ -50,10 +46,19 @@ pub fn mouse_input_system(
                     let x = coord.0 as i32 / 10;
                     let y = coord.1 as i32 / 10;
 
-                    to_send_guard.push(format!(
-                        "{} {} {} {} {}",
-                        data_guard.my_uid, "attack", x, y, ui_state.gold_percent
-                    ))
+                    if !ui_state.attack_ui_open {
+                        map_click.map_pos = Point {
+                            x: x as f32,
+                            y: y as f32,
+                        };
+                        map_click.screen_pos = Point {
+                            x: mouse_pos.x as f32,
+                            y: mouse_pos.y as f32,
+                        };
+                        ui_state.attack_ui_open = true;
+                    } else {
+                        ui_state.attack_ui_open = false;
+                    }
                 }
                 _ => {}
             }

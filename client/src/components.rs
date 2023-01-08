@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy::{prelude::Resource, utils::HashMap};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Point {
     pub x: f32,
     pub y: f32,
@@ -22,4 +22,11 @@ pub struct PositionToTileEntity {
 pub struct UiState {
     pub username: String,
     pub gold_percent: i32,
+    pub attack_ui_open: bool,
+}
+
+#[derive(Resource, Debug, Clone, Default)]
+pub struct MapClick {
+    pub screen_pos: Point,
+    pub map_pos: Point,
 }
