@@ -10,6 +10,7 @@ use common::{ClientMap, PlayerInfo};
 pub use components::*;
 mod systems;
 pub use systems::*;
+mod helper;
 //add default and stuff?
 #[derive(Resource)]
 pub struct DataWrap {
@@ -79,6 +80,7 @@ fn main() {
         .add_system(mouse_input_system)
         .add_system(username_ui)
         .add_system(attack_ui)
+        .add_system(cursor_position_system)
         .run();
 }
 

@@ -1,3 +1,4 @@
+use crate::helper::screen_coord_to_world_coord;
 use crate::Point;
 use crate::{MapClick, UiState};
 use bevy::input::mouse::*;
@@ -38,15 +39,15 @@ pub fn mouse_input_system(
                         //pos is in pixel in the screen, need to be transform in equivalent in transform
                         //convert the click in tile pos
 
-                        let coord = screen_coord_to_world_coord(
+                        let (world_x, world_y) = screen_coord_to_world_coord(
                             &windows,
                             camera_pos_x,
                             camera_pos_y,
                             mouse_pos.x,
                             mouse_pos.y,
                         );
-                        let x = coord.0 as i32 / 10;
-                        let y = coord.1 as i32 / 10;
+                        let x = world_x as i32 / 10;
+                        let y = world_y as i32 / 10;
 
                         if !ui_state.attack_ui_open {
                             map_click.map_pos = Point {
@@ -56,6 +57,10 @@ pub fn mouse_input_system(
                             map_click.screen_pos = Point {
                                 x: mouse_pos.x as f32,
                                 y: mouse_pos.y as f32,
+                            };
+                            map_click.bevy_wolrd_pos = Point {
+                                x: world_x,
+                                y: world_y,
                             };
                             ui_state.attack_ui_open = true;
                         }
@@ -68,22 +73,4 @@ pub fn mouse_input_system(
             }
         }
     }
-}
-
-pub fn screen_coord_to_world_coord(
-    windows: &Res<Windows>,
-    cam_x: f32,
-    cam_y: f32,
-    screen_x: f32,
-    screen_y: f32,
-) -> (f32, f32) {
-    let window = windows.get_primary().unwrap();
-    let center_x = window.width() as f32 / 2.;
-    let center_y = window.height() as f32 / 2.;
-
-    let x = (screen_x - center_x) + cam_x;
-    let y = (screen_y - center_y) + cam_y;
-    println!("click to {} {}", x, y);
-
-    return (x, y);
 }

@@ -29,4 +29,5 @@ pub struct UiState {
 pub struct MapClick {
     pub screen_pos: Point,
     pub map_pos: Point,
+    pub bevy_wolrd_pos: Point,
 }

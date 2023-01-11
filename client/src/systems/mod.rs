@@ -10,3 +10,5 @@ mod deserialize_player_info_system;
 pub use deserialize_player_info_system::deserialise_player_info_system;
 mod move_camera_system;
 pub use move_camera_system::move_camera_system;
+mod cursor_position_system;
+pub use cursor_position_system::cursor_position_system;
