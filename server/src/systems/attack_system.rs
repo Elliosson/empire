@@ -45,6 +45,7 @@ impl<'a> System<'a> for AttackSystem {
         {
             match game_phase.phase {
                 GamePhaseEnum::Playing => {
+                    let enemy_name = map.get_tile(&want_to_attack.pos).owner.clone();
                     match get_closest_border(&want_to_attack.pos, &player.name, &map) {
                         Ok(border_pos) => {
                             let gold_cost =
@@ -57,7 +58,7 @@ impl<'a> System<'a> for AttackSystem {
                                         gold: gold_cost,
                                         last_turn_conquest: vec![border_pos],
                                         owner: player.name.clone(),
-                                        enemy: None,
+                                        enemy: Some(enemy_name),
                                     },
                                     &mut ongoing_attacks,
                                 )
@@ -77,7 +78,7 @@ impl<'a> System<'a> for AttackSystem {
                                     gold: gold.quantity,
                                     last_turn_conquest: vec![want_to_attack.pos.clone()],
                                     owner: player.name.clone(),
-                                    enemy: None,
+                                    enemy: Some(String::default()),
                                 },
                                 &mut ongoing_attacks,
                             )

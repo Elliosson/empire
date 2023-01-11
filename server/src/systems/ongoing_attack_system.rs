@@ -33,18 +33,20 @@ impl<'a> System<'a> for OngoingAttackSystem {
             for pos in ongoing_attack.last_turn_conquest.iter() {
                 for target_pos in adjacent_positions(pos).iter() {
                     let tile: &mut Tile = map.get_tile_mut(target_pos);
-                    if tile.owner == "" {
-                        if ongoing_attack.gold >= 1. {
-                            tile.owner = ongoing_attack.owner.clone();
-                            ongoing_attack.gold -= 1.;
-                            new_conquest.push(target_pos.clone());
-                        }
-                    } else if tile.owner != ongoing_attack.owner {
-                        if ongoing_attack.gold >= 2. {
-                            ongoing_attack.gold -= 2.;
-                            *defence_cost.entry(tile.owner.clone()).or_insert(0) += 1;
-                            tile.owner = ongoing_attack.owner.clone();
-                            new_conquest.push(target_pos.clone());
+                    if tile.owner == ongoing_attack.enemy.clone().unwrap() {
+                        if tile.owner == "" {
+                            if ongoing_attack.gold >= 1. {
+                                tile.owner = ongoing_attack.owner.clone();
+                                ongoing_attack.gold -= 1.;
+                                new_conquest.push(target_pos.clone());
+                            }
+                        } else if tile.owner != ongoing_attack.owner {
+                            if ongoing_attack.gold >= 2. {
+                                ongoing_attack.gold -= 2.;
+                                *defence_cost.entry(tile.owner.clone()).or_insert(0) += 1;
+                                tile.owner = ongoing_attack.owner.clone();
+                                new_conquest.push(target_pos.clone());
+                            }
                         }
                     }
                 }
