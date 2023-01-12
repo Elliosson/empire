@@ -12,3 +12,5 @@ mod player_info_system;
 pub use player_info_system::PlayerInfoSystem;
 mod defeat_system;
 pub use defeat_system::DefeatSystem;
+mod resources_generation_system;
+pub use resources_generation_system::ResourceGenerationSystem;

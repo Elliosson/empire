@@ -1,5 +1,6 @@
 use crate::Position;
 use common::Biome;
+use common::Resources;
 use rltk::{Rltk, RGB};
 use serde::{Deserialize, Serialize};
 
@@ -10,6 +11,7 @@ pub const MAPHEIGHT: i32 = 50;
 pub struct Tile {
     pub biome: Biome,
     pub owner: String,
+    pub resource: Option<Resources>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -51,6 +53,18 @@ pub fn new_map() -> Map {
         let idx = xy_idx(x, y);
         if idx != xy_idx(40, 25) {
             map.tiles[idx].biome = Biome::Desert;
+        }
+    }
+
+    // Now we'll randomly splat a bunch of wood.
+    let mut rng = rltk::RandomNumberGenerator::new();
+
+    for _i in 0..400 {
+        let x = rng.roll_dice(1, MAPWIDTH - 1);
+        let y = rng.roll_dice(1, MAPHEIGHT - 1);
+        let idx = xy_idx(x, y);
+        if idx != xy_idx(40, 25) {
+            map.tiles[idx].resource = Some(Resources::Wood);
         }
     }
 

@@ -1,4 +1,4 @@
-use common::MapMessage;
+use common::{MapMessage, PlayerInfo};
 use rltk::{GameState, Rltk};
 use specs::prelude::*;
 
@@ -47,6 +47,8 @@ impl State {
         ongoing_attack.run_now(&self.ecs);
         let mut gold_generation = GoldGenerationSystem {};
         gold_generation.run_now(&self.ecs);
+        let mut resources_generation = ResourceGenerationSystem {};
+        resources_generation.run_now(&self.ecs);
         let mut defeat = DefeatSystem {};
         defeat.run_now(&self.ecs);
         let mut player_info = PlayerInfoSystem {};
@@ -74,6 +76,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<Player>();
     gs.ecs.register::<PlayerInfo>();
     gs.ecs.register::<GamePhase>();
+    gs.ecs.register::<ResourcesStorage>();
 
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {

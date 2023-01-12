@@ -1,7 +1,9 @@
+use common::Resources;
 use rltk::RGB;
 use serde::{Deserialize, Serialize};
 use specs::prelude::*;
 use specs_derive::*;
+use std::collections::HashMap;
 
 #[derive(Component, Clone, Debug, PartialEq, Eq, Hash, Copy)]
 pub struct Position {
@@ -51,11 +53,6 @@ pub struct OnGoingAttack {
     pub enemy: Option<String>,
 }
 
-#[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
-pub struct PlayerInfo {
-    pub gold: f32,
-}
-
 #[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 pub enum GamePhaseEnum {
     #[default]
@@ -67,3 +64,14 @@ pub enum GamePhaseEnum {
 pub struct GamePhase {
     pub phase: GamePhaseEnum,
 }
+
+#[derive(Component, Clone, Debug, Default, Serialize)]
+pub struct ResourcesStorage {
+    pub storage: HashMap<Resources, f32>,
+}
+
+#[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
+pub struct BuildedTile {}
+
+#[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
+pub struct ResourceExtractionBuilding {}

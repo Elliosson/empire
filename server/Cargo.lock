@@ -3938,6 +3938,8 @@ dependencies = [
  "bevy",
  "serde",
  "serde_json",
+ "specs",
+ "specs-derive",
 ]
 
 [[package]]

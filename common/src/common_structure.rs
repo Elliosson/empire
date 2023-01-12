@@ -1,5 +1,9 @@
-use bevy::prelude::*;
+use std::collections::HashMap;
+
+// use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
+use specs::prelude::*;
+// use specs_derive::*;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub enum Biome {
@@ -10,6 +14,15 @@ pub enum Biome {
     Mountain,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, Default, PartialEq, Eq, Hash)]
+pub enum Resources {
+    #[default]
+    Wood,
+    Stone,
+    Iron,
+    Wheat,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ClientTile {
     pub biome: Biome,
@@ -18,7 +31,7 @@ pub struct ClientTile {
     pub owner: String,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize, Resource)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize, bevy::prelude::Resource)]
 pub struct ClientMap {
     pub tiles: Vec<ClientTile>,
 }
@@ -31,7 +44,10 @@ pub struct PlayerInfoMessage {
     pub json: String,
 }
 
-#[derive(Resource, Default, Serialize, Deserialize, Clone)]
+#[derive(
+    specs_derive::Component, bevy::prelude::Resource, Clone, Debug, Default, Serialize, Deserialize,
+)]
 pub struct PlayerInfo {
     pub gold: f32,
+    pub resources: HashMap<Resources, f32>,
 }

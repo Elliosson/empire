@@ -34,5 +34,6 @@ pub fn username_ui(
             if ui.button("Increment").clicked() {
                 ui_state.gold_percent += 1;
             }
+            ui.label(format!("Resouces: {:?} ", player_info.resources));
         });
 }

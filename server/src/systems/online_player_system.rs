@@ -1,5 +1,8 @@
 extern crate specs;
-use crate::{network, Connected, GamePhase, Gold, Player, PlayerInfo, Position, WantToAttack};
+use crate::{
+    network, Connected, GamePhase, Gold, Player, Position, ResourcesStorage, WantToAttack,
+};
+use common::PlayerInfo;
 
 use specs::prelude::*;
 use std::collections::HashMap;
@@ -20,6 +23,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
         WriteStorage<'a, Gold>,
         WriteStorage<'a, PlayerInfo>,
         WriteStorage<'a, GamePhase>,
+        WriteStorage<'a, ResourcesStorage>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -34,6 +38,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             mut golds,
             mut player_infos,
             mut game_phases,
+            mut resources_storages,
         ) = data;
 
         let mut new_player_list = Vec::new();
@@ -119,6 +124,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     .with(Gold { quantity: 100. }, &mut golds)
                     .with(PlayerInfo::default(), &mut player_infos)
                     .with(GamePhase::default(), &mut game_phases)
+                    .with(ResourcesStorage::default(), &mut resources_storages)
                     .build();
 
                 player_entity = new_player;
