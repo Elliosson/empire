@@ -81,6 +81,7 @@ pub fn format_map_for_client(map: &Map) -> ClientMap {
             x,
             y,
             owner: tile.owner.clone(),
+            resource: tile.resource.clone(),
         });
     }
 

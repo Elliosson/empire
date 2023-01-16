@@ -29,6 +29,7 @@ pub struct ClientTile {
     pub x: i32,
     pub y: i32,
     pub owner: String,
+    pub resource: Option<Resources>,
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize, bevy::prelude::Resource)]

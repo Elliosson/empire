@@ -1,6 +1,6 @@
 use crate::PositionToTileEntity;
 use bevy::prelude::*;
-use common::{Biome, ClientMap};
+use common::{Biome, ClientMap, Resources};
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
@@ -15,6 +15,13 @@ pub fn map_system(
             Biome::Plain => Color::rgb(0.25, 0.75, 0.25),
             _ => Color::rgb(0.25, 0.25, 0.75),
         };
+
+        if let Some(resource) = &tile.resource {
+            color = match resource {
+                Resources::Wood => Color::rgb(0.75, 0.75, 0.75),
+                _ => Color::rgb(0.75, 0.0, 0.0),
+            };
+        }
 
         if tile.owner != "" {
             let hash = calculate_hash(&tile.owner);
