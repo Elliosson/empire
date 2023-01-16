@@ -2,19 +2,21 @@ use crate::Position;
 use common::Biome;
 use common::Resources;
 use rltk::{Rltk, RGB};
-use serde::{Deserialize, Serialize};
+use specs::prelude::*;
+use specs::world::EntitiesRes;
 
 pub const MAPWIDTH: i32 = 80;
 pub const MAPHEIGHT: i32 = 50;
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default)]
 pub struct Tile {
     pub biome: Biome,
     pub owner: String,
     pub resource: Option<Resources>,
+    pub entity: Option<Entity>,
 }
 
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default)]
 pub struct Map {
     pub tiles: Vec<Tile>,
 }
@@ -141,6 +143,19 @@ impl Map {
             return &self.tiles[0];
         }
         return &self.tiles[idx];
+    }
+    pub fn get_tile_entity_or_create(
+        &mut self,
+        pos: &Position,
+        entities: &Read<EntitiesRes>,
+    ) -> Entity {
+        let mut tile = self.get_tile_mut(pos);
+        if let Some(entity) = tile.entity {
+            return entity;
+        } else {
+            tile.entity = Some(entities.create());
+            return tile.entity.unwrap();
+        }
     }
 }
 

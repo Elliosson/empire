@@ -49,6 +49,8 @@ impl State {
         gold_generation.run_now(&self.ecs);
         let mut resources_generation = ResourceGenerationSystem {};
         resources_generation.run_now(&self.ecs);
+        let mut build = BuildSystem {};
+        build.run_now(&self.ecs);
         let mut defeat = DefeatSystem {};
         defeat.run_now(&self.ecs);
         let mut player_info = PlayerInfoSystem {};
@@ -77,6 +79,9 @@ fn main() -> rltk::BError {
     gs.ecs.register::<PlayerInfo>();
     gs.ecs.register::<GamePhase>();
     gs.ecs.register::<ResourcesStorage>();
+    gs.ecs.register::<BuildedTile>();
+    gs.ecs.register::<ResourceExtractionBuilding>();
+    gs.ecs.register::<WantToBuild>();
 
     let args: Vec<String> = env::args().collect();
     let config = Config::new(&args).unwrap_or_else(|err| {

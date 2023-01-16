@@ -45,10 +45,18 @@ pub struct PlayerInfoMessage {
     pub json: String,
 }
 
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct BuildingInfo {
+    pub name: String,
+    pub x: i32,
+    pub y: i32,
+}
+
 #[derive(
     specs_derive::Component, bevy::prelude::Resource, Clone, Debug, Default, Serialize, Deserialize,
 )]
 pub struct PlayerInfo {
     pub gold: f32,
     pub resources: HashMap<Resources, f32>,
+    pub buildings: Vec<BuildingInfo>,
 }

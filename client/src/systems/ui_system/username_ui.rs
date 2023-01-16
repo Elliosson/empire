@@ -9,7 +9,7 @@ pub fn username_ui(
     to_send: ResMut<ToSendWrap>,
     player_info: ResMut<PlayerInfo>,
 ) {
-    egui::SidePanel::left("Hello")
+    egui::SidePanel::left("Left Panel")
         .exact_width(300.)
         .show(egui_ctx.ctx_mut(), |ui| {
             ui.label("world");

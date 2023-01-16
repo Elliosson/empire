@@ -80,6 +80,7 @@ fn main() {
         .add_system(mouse_input_system)
         .add_system(username_ui)
         .add_system(attack_ui)
+        .add_system(building_ui)
         .add_system(cursor_position_system)
         .run();
 }

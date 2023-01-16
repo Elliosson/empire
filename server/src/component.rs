@@ -5,7 +5,7 @@ use specs::prelude::*;
 use specs_derive::*;
 use std::collections::HashMap;
 
-#[derive(Component, Clone, Debug, PartialEq, Eq, Hash, Copy)]
+#[derive(Component, Clone, Debug, PartialEq, Eq, Hash, Copy, Serialize, Deserialize, Default)]
 pub struct Position {
     pub x: i32,
     pub y: i32,
@@ -75,3 +75,9 @@ pub struct BuildedTile {}
 
 #[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
 pub struct ResourceExtractionBuilding {}
+
+#[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
+pub struct WantToBuild {
+    pub name: String,
+    pub pos: Position,
+}

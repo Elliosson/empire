@@ -14,3 +14,5 @@ mod defeat_system;
 pub use defeat_system::DefeatSystem;
 mod resources_generation_system;
 pub use resources_generation_system::ResourceGenerationSystem;
+mod build_system;
+pub use build_system::BuildSystem;
