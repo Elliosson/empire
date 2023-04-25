@@ -2,3 +2,8 @@
 /server/target
 /client/target
 /common/target
+.DS_Store
+client/.DS_Store
+common/.DS_Store
+server/.DS_Store
+client/wasm/.DS_Store

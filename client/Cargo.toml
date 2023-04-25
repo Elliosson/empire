@@ -19,3 +19,13 @@ common = {package = "sumer-common", path = "../common"}
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 bevy = "0.9.0"
 websocket = "0.24.0"
+
+[target.'cfg(any(target_arch = "wasm32"))'.dependencies]
+web-sys = {version = "0.3.22", features = [
+  "ErrorEvent",
+  "MessageEvent",
+  "WebSocket",
+  "console",]}
+bevy = "0.9.0"
+instant = { version = "0.1", features = [ "stdweb" ] }
+wasm-bindgen = "0.2.84"

@@ -27,8 +27,12 @@ pub fn start_websocket(
     to_send: Arc<Mutex<Vec<String>>>,
 ) -> Result<WebSocket, JsValue> {
     // Connect to the game server
-    let ws = WebSocket::new("ws://localhost:4321")?;
+    let url = "wss://sumserver235235.fly.dev:443";
+    // let url = "ws://localhost:8082";
+    let ws = WebSocket::new(url)?;
     //let ws = WebSocket::new("ws://51.68.141.5:4321")?;
+
+    console_log!("start websocket {:?}", url);
 
     let cloned_ws = ws.clone();
     //send message to the serveer
