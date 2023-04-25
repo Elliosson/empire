@@ -1,0 +1,34 @@
+# fly.toml app configuration file generated for sumserver235235 on 2023-04-25T02:08:05+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "sumserver235235"
+primary_region = "waw"
+kill_signal = "SIGINT"
+kill_timeout = 5
+
+[experimental]
+  auto_rollback = true
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 8080
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "1s"
+    restart_limit = 0

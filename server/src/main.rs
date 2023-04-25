@@ -11,29 +11,34 @@ use network::Config;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use std::{env, process};
+use std::{process, time};
 use systems::*;
 mod systems;
+
+pub const TICK_TIME: time::Duration = time::Duration::from_millis(50);
 
 struct State {
     ecs: World,
 }
 
 impl GameState for State {
-    fn tick(&mut self, ctx: &mut Rltk) {
-        ctx.cls();
+    fn tick(&mut self, ctx: &mut Rltk) {}
+}
 
-        self.run_systems();
+fn common_tick(gs: &mut State) {
+    let start = time::Instant::now();
 
-        let map = self.ecs.fetch::<Map>();
-        draw_map(&map, ctx);
+    gs.run_systems();
 
-        let positions = self.ecs.read_storage::<Position>();
-        let renderables = self.ecs.read_storage::<Renderable>();
+    let end = time::Instant::now();
 
-        for (pos, render) in (&positions, &renderables).join() {
-            ctx.set(pos.x, pos.y, render.fg, render.bg, render.glyph);
-        }
+    let time_spend = end - start;
+
+    if TICK_TIME > time_spend {
+        let time_left = TICK_TIME - time_spend;
+        thread::sleep(time_left);
+    } else {
+        println!("WARNING: tick is too slow ! : {:?}", time_spend);
     }
 }
 
@@ -63,7 +68,7 @@ impl State {
 
 fn main() -> rltk::BError {
     use rltk::RltkBuilder;
-    let context = RltkBuilder::simple80x50().with_title("Sumerian").build()?;
+    // let context = RltkBuilder::simple80x50().with_title("Sumerian").build()?;
     let mut gs = State { ecs: World::new() };
     gs.ecs.insert(new_map());
     gs.ecs.insert(UuidPlayerHash::new());
@@ -83,8 +88,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<ResourceExtractionBuilding>();
     gs.ecs.register::<WantToBuild>();
 
-    let args: Vec<String> = env::args().collect();
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    let config = Config::new().unwrap_or_else(|err| {
         println!("Error creating Config: {}", err);
         println!("Usage: server url");
         process::exit(1);
@@ -109,5 +113,7 @@ fn main() -> rltk::BError {
         network::run(config, message_list, map_to_send, player_info_to_send);
     });
 
-    rltk::main_loop(context, gs)
+    loop {
+        common_tick(&mut gs);
+    }
 }

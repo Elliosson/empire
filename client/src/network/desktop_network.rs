@@ -13,7 +13,7 @@ use std::time::Duration;
 use websocket::client::ClientBuilder;
 use websocket::{Message, OwnedMessage};
 
-const CONNECTION: &'static str = "ws://localhost:4321";
+const CONNECTION: &'static str = "ws://sumserver235235.fly.dev:80";
 
 pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>) {
     println!("Connecting to {}", CONNECTION);

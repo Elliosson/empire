@@ -9,12 +9,8 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 2 {
-            return Err("Not enough arguments");
-        }
-
-        let url = args[1].clone();
+    pub fn new() -> Result<Config, &'static str> {
+        let url = "0.0.0.0:8080".to_string();
 
         Ok(Config { url })
     }
