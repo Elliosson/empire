@@ -4,15 +4,20 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use uuid::Uuid;
 
+#[cfg(build = "release")]
+const URL: &'static str = "0.0.0.0:8080";
+#[cfg(not(build = "release"))]
+const URL: &'static str = "0.0.0.0:4321";
+
 pub struct Config {
     pub url: String,
 }
 
 impl Config {
     pub fn new() -> Result<Config, &'static str> {
-        let url = "0.0.0.0:8080".to_string();
-
-        Ok(Config { url })
+        Ok(Config {
+            url: URL.to_string(),
+        })
     }
 }
 

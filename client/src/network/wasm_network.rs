@@ -10,6 +10,11 @@ use web_sys::{ErrorEvent, MessageEvent, WebSocket};
 
 pub const ASK_DATA_INTERVAL: u32 = 100;
 
+#[cfg(build = "release")]
+const CONNECTION: &'static str = "wss://sumserver235235.fly.dev:443";
+#[cfg(not(build = "release"))]
+const CONNECTION: &'static str = "ws://localhost:4321";
+
 macro_rules! console_log {
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
@@ -27,10 +32,7 @@ pub fn start_websocket(
     to_send: Arc<Mutex<Vec<String>>>,
 ) -> Result<WebSocket, JsValue> {
     // Connect to the game server
-    let url = "wss://sumserver235235.fly.dev:443";
-    // let url = "ws://localhost:8082";
-    let ws = WebSocket::new(url)?;
-    //let ws = WebSocket::new("ws://51.68.141.5:4321")?;
+    let ws = WebSocket::new(CONNECTION)?;
 
     console_log!("start websocket {:?}", url);
 
