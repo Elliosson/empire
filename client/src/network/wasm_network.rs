@@ -80,7 +80,7 @@ pub fn start_websocket(
                 Err(err) => console_log!("error sending message: {:?}", err),
             };
         match handle_responce(response.clone(), data.clone(), message_sender.clone()) {
-            Some((general_network::Message::Play(uid), _)) => {}
+            Some((general_network::Message::Play(_uid), _)) => {}
             _ => {}
         }
     }) as Box<dyn FnMut(MessageEvent)>);
