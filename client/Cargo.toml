@@ -29,3 +29,7 @@ web-sys = {version = "0.3.22", features = [
 bevy = "0.9.0"
 instant = { version = "0.1", features = [ "stdweb" ] }
 wasm-bindgen = "0.2.84"
+
+[features]
+# deploying on fly.io
+fly = []

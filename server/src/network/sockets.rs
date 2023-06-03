@@ -4,9 +4,9 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use uuid::Uuid;
 
-#[cfg(build = "release")]
+#[cfg(feature = "fly")]
 const URL: &'static str = "0.0.0.0:8080";
-#[cfg(not(build = "release"))]
+#[cfg(not(feature = "fly"))]
 const URL: &'static str = "0.0.0.0:4321";
 
 pub struct Config {

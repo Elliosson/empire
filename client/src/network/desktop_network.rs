@@ -13,9 +13,9 @@ use std::time::Duration;
 use websocket::client::ClientBuilder;
 use websocket::{Message, OwnedMessage};
 
-#[cfg(build = "release")]
-const CONNECTION: &'static str = "wss://sumserver235235.fly.dev:80";
-#[cfg(not(build = "release"))]
+#[cfg(feature = "fly")]
+const CONNECTION: &'static str = "wss://sumerserver.fly.dev:80";
+#[cfg(not(feature = "fly"))]
 const CONNECTION: &'static str = "ws://localhost:4321";
 
 pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>) {

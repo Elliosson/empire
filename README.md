@@ -18,8 +18,6 @@ To deploy with fly.io
 fly deploy
 2-Client
 cd client/
-cargo build --release --target wasm32-unknown-unknown
-wasm-bindgen --out-name wasm_client \               
-  --out-dir wasm/target \
-  --target web target/wasm32-unknown-unknown/release/client.wasm
+cargo build --release --features fly --target wasm32-unknown-unknown
+wasm-bindgen --out-name wasm_client --out-dir wasm/target --target web target/wasm32-unknown-unknown/release/client.wasm
 fly deploy

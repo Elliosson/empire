@@ -10,9 +10,9 @@ use web_sys::{ErrorEvent, MessageEvent, WebSocket};
 
 pub const ASK_DATA_INTERVAL: u32 = 100;
 
-#[cfg(build = "release")]
-const CONNECTION: &'static str = "wss://sumserver235235.fly.dev:443";
-#[cfg(not(build = "release"))]
+#[cfg(feature = "fly")]
+const CONNECTION: &'static str = "wss://sumerserver.fly.dev:443";
+#[cfg(not(feature = "fly"))]
 const CONNECTION: &'static str = "ws://localhost:4321";
 
 macro_rules! console_log {
@@ -34,18 +34,28 @@ pub fn start_websocket(
     // Connect to the game server
     let ws = WebSocket::new(CONNECTION)?;
 
-    console_log!("start websocket {:?}", url);
+    console_log!("start websocket {:?}", CONNECTION);
 
     let cloned_ws = ws.clone();
     //send message to the serveer
     let cb = Closure::wrap(Box::new(move || {
         let mut to_send_guard = to_send.lock().unwrap();
 
-        for message in to_send_guard.drain(..) {
-            cloned_ws
-                .send_with_str(&message)
-                .expect("Unable to send message");
+        //list stuff if idx, at first failure, break and keep index.
+        //remove all the messages before idx of to_send_guard, keep the others.
+        let mut idx = 0;
+        for message in to_send_guard.iter() {
+            console_log!("trying to send: {:?}", message);
+            match cloned_ws.send_with_str(&message) {
+                Ok(()) => console_log!("message send"),
+                Err(_) => {
+                    console_log!("failed to send the message");
+                    break;
+                }
+            }
+            idx += 1;
         }
+        to_send_guard.drain(0..idx);
     }) as Box<dyn FnMut()>);
     let _interval_id = setInterval(&cb, ASK_DATA_INTERVAL);
     cb.forget();
