@@ -12,21 +12,24 @@ pub fn cursor_position_system(
 ) {
     let mut camera_pos_x = 0.;
     let mut camera_pos_y = 0.;
+    let mut camera_scale = 1.;
 
     for (_camera, transform) in query_camera.iter() {
         let translation = &transform.translation;
 
         camera_pos_x = translation.x;
         camera_pos_y = translation.y;
+        camera_scale = transform.scale.x;
     }
 
     for ev in cursor_evr.iter() {
         let (x, y) = screen_coord_to_world_coord(
             &windows,
-            ev.position.x,
-            ev.position.y,
             camera_pos_x,
             camera_pos_y,
+            ev.position.x,
+            ev.position.y,
+            camera_scale,
         );
 
         if ui_state.attack_ui_open {

@@ -30,7 +30,7 @@ pub fn attack_ui(
             .show(egui_ctx.ctx_mut(), |ui| {
                 if ui.button("Attack").clicked() {
                     {
-                        println!("attack");
+                        println!("attack {} {}", map_click.map_pos.x, map_click.map_pos.y);
                         let mut to_send_guard = to_send.to_send.lock().unwrap();
                         to_send_guard.push(format!(
                             "{} {} {} {} {}",

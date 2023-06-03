@@ -40,7 +40,7 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
             let mut to_send_guard = to_send.lock().unwrap();
 
             for message in to_send_guard.drain(..) {
-                println!("send: {}", message.clone());
+                //println!("send: {}", message.clone());
 
                 let _ = tx_1.send(OwnedMessage::Text(message));
             }

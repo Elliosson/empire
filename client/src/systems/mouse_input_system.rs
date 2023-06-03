@@ -17,12 +17,14 @@ pub fn mouse_input_system(
     //todo proprement avec id connue de la main camera
     let mut camera_pos_x = 0.;
     let mut camera_pos_y = 0.;
+    let mut camera_scale = 1.;
 
     for (_camera, transform) in query_camera.iter() {
         let translation = &transform.translation;
 
         camera_pos_x = translation.x;
         camera_pos_y = translation.y;
+        camera_scale = transform.scale.x;
     }
 
     for event in mouse_button_input_events.iter() {
@@ -45,6 +47,7 @@ pub fn mouse_input_system(
                             camera_pos_y,
                             mouse_pos.x,
                             mouse_pos.y,
+                            camera_scale,
                         );
                         let x = world_x as i32 / 10;
                         let y = world_y as i32 / 10;
