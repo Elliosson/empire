@@ -1,6 +1,6 @@
 extern crate websocket;
 
-use std::sync::mpsc::{channel, TryRecvError};
+use std::sync::mpsc::channel;
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
 
@@ -32,7 +32,6 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
     let (mut receiver, mut sender) = client.split().unwrap();
 
     let (tx, rx): (Sender<OwnedMessage>, Receiver<OwnedMessage>) = channel();
-    let (asker_tx, asker_rx): (Sender<String>, Receiver<String>) = channel();
 
     let tx_1 = tx.clone();
 
@@ -119,11 +118,7 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
                         data.clone(),
                         message_sender.clone(),
                     ) {
-                        Some((general_network::Message::Play(uid), _)) => {
-                            asker_tx
-                                .send(uid)
-                                .expect("Unable to send message to channel");
-                        }
+                        Some((general_network::Message::Play(_uid), _)) => {}
                         _ => {}
                     }
                 }
@@ -131,34 +126,6 @@ pub fn start_websocket(data: Arc<Mutex<Data>>, to_send: Arc<Mutex<Vec<String>>>)
                     println!("Receive Loop: {:?}", message);
                 }
             }
-        }
-    });
-
-    let tx_4 = tx.clone();
-    let message_sender = move |uid, message| {
-        tx_4.send(OwnedMessage::Text(format!("{} {}", uid, message)))
-            .expect("Unable to send message to channel");
-    };
-    //thread that periodically ask basic stuff like player info and the map
-    let _asker_loop = thread::spawn(move || {
-        let mut maybe_uuid = None;
-
-        loop {
-            //update uuid
-            match asker_rx.try_recv() {
-                Ok(new_uuid) => {
-                    println!("Change uuid.");
-                    maybe_uuid = Some(new_uuid);
-                }
-                Err(TryRecvError::Empty) => {}
-                Err(TryRecvError::Disconnected) => break,
-            }
-
-            if let Some(uuid) = &maybe_uuid {
-                message_sender(uuid.clone(), "map".to_string());
-                message_sender(uuid.clone(), "player_info".to_string());
-            }
-            thread::sleep(Duration::from_millis(100));
         }
     });
 }

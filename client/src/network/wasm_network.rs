@@ -80,18 +80,7 @@ pub fn start_websocket(
                 Err(err) => console_log!("error sending message: {:?}", err),
             };
         match handle_responce(response.clone(), data.clone(), message_sender.clone()) {
-            Some((general_network::Message::Play(uid), _)) => {
-                let message_sender2 = message_sender.clone();
-
-                // this closure will regulary send request to the server
-                let cb = Closure::wrap(Box::new(move || {
-                    message_sender2(uid.clone(), "map".to_string());
-                    message_sender2(uid.clone(), "player_info".to_string());
-                    console_log!("ask map and player_info");
-                }) as Box<dyn FnMut()>);
-                let _interval_id = setInterval(&cb, ASK_DATA_INTERVAL);
-                cb.forget();
-            }
+            Some((general_network::Message::Play(uid), _)) => {}
             _ => {}
         }
     }) as Box<dyn FnMut(MessageEvent)>);

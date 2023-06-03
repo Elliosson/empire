@@ -31,3 +31,8 @@ pub struct MapClick {
     pub map_pos: Point,
     pub bevy_wolrd_pos: Point,
 }
+
+#[derive(Resource, Debug, Clone)]
+pub struct LastRequestInfoTime {
+    pub time: instant::Instant,
+}
