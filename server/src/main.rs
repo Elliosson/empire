@@ -22,7 +22,7 @@ struct State {
 }
 
 impl GameState for State {
-    fn tick(&mut self, ctx: &mut Rltk) {}
+    fn tick(&mut self, _: &mut Rltk) {}
 }
 
 fn common_tick(gs: &mut State) {
@@ -67,8 +67,6 @@ impl State {
 }
 
 fn main() -> rltk::BError {
-    use rltk::RltkBuilder;
-    // let context = RltkBuilder::simple80x50().with_title("Sumerian").build()?;
     let mut gs = State { ecs: World::new() };
     gs.ecs.insert(new_map());
     gs.ecs.insert(UuidPlayerHash::new());
