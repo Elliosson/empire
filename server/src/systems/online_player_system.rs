@@ -1,6 +1,7 @@
 extern crate specs;
 use crate::{
-    network, Connected, GamePhase, Gold, Player, Position, ResourcesStorage, WantToAttack,
+    network, Connected, GamePhase, Gold, Player, Position, ResourcesStorage, TerritoryArea,
+    WantToAttack,
 };
 use common::PlayerInfo;
 
@@ -24,6 +25,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
         WriteStorage<'a, PlayerInfo>,
         WriteStorage<'a, GamePhase>,
         WriteStorage<'a, ResourcesStorage>,
+        WriteStorage<'a, TerritoryArea>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -39,6 +41,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             mut player_infos,
             mut game_phases,
             mut resources_storages,
+            mut territory_areas,
         ) = data;
 
         let mut new_player_list = Vec::new();
@@ -125,6 +128,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                     .with(PlayerInfo::default(), &mut player_infos)
                     .with(GamePhase::default(), &mut game_phases)
                     .with(ResourcesStorage::default(), &mut resources_storages)
+                    .with(TerritoryArea::default(), &mut territory_areas)
                     .build();
 
                 player_entity = new_player;

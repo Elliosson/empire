@@ -39,7 +39,7 @@ pub struct Gold {
     pub quantity: f32,
 }
 
-#[derive(Component, Clone, Debug)]
+#[derive(Component, Clone, Debug, Default)]
 pub struct TerritoryArea {
     pub area: i32,
 }
