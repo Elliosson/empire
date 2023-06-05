@@ -16,3 +16,5 @@ mod resources_generation_system;
 pub use resources_generation_system::ResourceGenerationSystem;
 mod build_system;
 pub use build_system::BuildSystem;
+mod territory_stat_system;
+pub use territory_stat_system::TerritoryStatSystem;

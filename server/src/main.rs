@@ -56,6 +56,8 @@ impl State {
         resources_generation.run_now(&self.ecs);
         let mut build = BuildSystem {};
         build.run_now(&self.ecs);
+        let mut territory_stat = TerritoryStatSystem {};
+        territory_stat.run_now(&self.ecs);
         let mut defeat = DefeatSystem {};
         defeat.run_now(&self.ecs);
         let mut player_info = PlayerInfoSystem {};
@@ -85,6 +87,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<BuildedTile>();
     gs.ecs.register::<ResourceExtractionBuilding>();
     gs.ecs.register::<WantToBuild>();
+    gs.ecs.register::<TerritoryArea>();
 
     let config = Config::new().unwrap_or_else(|err| {
         println!("Error creating Config: {}", err);

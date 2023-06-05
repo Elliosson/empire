@@ -72,9 +72,11 @@ fn main() {
         .insert_resource(UiState::default())
         .insert_resource(PlayerInfo::default())
         .insert_resource(MapClick::default())
+        .insert_resource(RightClickedTile::default())
         .insert_resource(LastRequestInfoTime {
             time: instant::Instant::now(),
         })
+        .insert_resource(RightClickedTile::default())
         .add_startup_system(setup)
         .add_system(move_camera_system)
         .add_system(deserialize_map_system)
@@ -84,6 +86,7 @@ fn main() {
         .add_system(username_ui)
         .add_system(attack_ui)
         .add_system(building_ui)
+        .add_system(info_ui)
         .add_system(cursor_position_system)
         .add_system(request_info_system)
         .run();

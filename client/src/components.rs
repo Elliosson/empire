@@ -36,3 +36,8 @@ pub struct MapClick {
 pub struct LastRequestInfoTime {
     pub time: instant::Instant,
 }
+
+#[derive(Resource, Debug, Clone, Default)]
+pub struct RightClickedTile {
+    pub pos: Point,
+}

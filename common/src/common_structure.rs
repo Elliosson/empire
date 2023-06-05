@@ -59,4 +59,5 @@ pub struct PlayerInfo {
     pub gold: f32,
     pub resources: HashMap<Resources, f32>,
     pub buildings: Vec<BuildingInfo>,
+    pub player_to_golds: HashMap<String, f32>,
 }
