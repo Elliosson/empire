@@ -35,5 +35,9 @@ pub fn username_ui(
                 ui_state.gold_percent += 1;
             }
             ui.label(format!("Resouces: {:?} ", player_info.resources));
+            if ui.button("New Game").clicked() {
+                let mut to_send_guard = to_send.to_send.lock().unwrap();
+                to_send_guard.push(format!("new_game"));
+            }
         });
 }
