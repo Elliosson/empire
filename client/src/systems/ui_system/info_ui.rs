@@ -11,7 +11,7 @@ pub fn info_ui(
 ) {
     egui::Window::new("Info").show(egui_ctx.ctx_mut(), |ui| {
         let mut owner = "".to_string();
-        for tile in map.tiles.iter() {
+        for tile in map.tiles.values() {
             if tile.x == right_click.pos.x as i32 && tile.y == right_click.pos.y as i32 {
                 owner = tile.owner.clone();
                 break;

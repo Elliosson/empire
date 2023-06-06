@@ -76,13 +76,16 @@ pub fn format_map_for_client(map: &Map) -> ClientMap {
 
     for (i, tile) in map.tiles.iter().enumerate() {
         let (x, y) = idx_xy(i);
-        client_map.tiles.push(ClientTile {
-            biome: tile.biome.clone(),
-            x,
-            y,
-            owner: tile.owner.clone(),
-            resource: tile.resource.clone(),
-        });
+        client_map.tiles.insert(
+            (x, y),
+            ClientTile {
+                biome: tile.biome.clone(),
+                x,
+                y,
+                owner: tile.owner.clone(),
+                resource: tile.resource.clone(),
+            },
+        );
     }
 
     return client_map;

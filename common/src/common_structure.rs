@@ -4,6 +4,7 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use specs::prelude::*;
 // use specs_derive::*;
+use serde_with::serde_as;
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub enum Biome {
@@ -32,9 +33,11 @@ pub struct ClientTile {
     pub resource: Option<Resources>,
 }
 
+#[serde_as]
 #[derive(Debug, Clone, Default, Serialize, Deserialize, bevy::prelude::Resource)]
 pub struct ClientMap {
-    pub tiles: Vec<ClientTile>,
+    #[serde_as(as = "Vec<(_, _)>")]
+    pub tiles: HashMap<(i32, i32), ClientTile>,
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct MapMessage {
