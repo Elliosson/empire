@@ -5,7 +5,7 @@ pub enum Message {
     Register(String),
     Registered(Uuid, String),
     Play(Uuid),
-    Map(Uuid),
+    Map(Uuid, i32, i32, i32), //uuid, x, y, scale
     PlayerInfo(Uuid),
     Attack(Uuid, i32, i32, i32), // uuid, x, y, percent
 }
@@ -28,7 +28,13 @@ impl Message {
             let command = parts.next()?;
             let msg = match command {
                 "play" => Some(Message::Play(id)),
-                "map" => Some(Message::Map(id)),
+                "map" => {
+                    let message: Vec<&str> = parts.collect();
+                    let x: i32 = message[0].parse().unwrap();
+                    let y: i32 = message[1].parse().unwrap();
+                    let scale: i32 = message[2].parse().unwrap();
+                    Some(Message::Map(id, x, y, scale))
+                }
                 "attack" => {
                     let message: Vec<&str> = parts.collect();
                     let x: i32 = message[0].parse().unwrap();

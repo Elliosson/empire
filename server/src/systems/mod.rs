@@ -18,3 +18,5 @@ mod build_system;
 pub use build_system::BuildSystem;
 mod territory_stat_system;
 pub use territory_stat_system::TerritoryStatSystem;
+mod send_map_system;
+pub use send_map_system::SendMapSystem;

@@ -44,26 +44,47 @@ fn common_tick(gs: &mut State) {
 
 impl State {
     fn run_systems(&mut self) {
+        let start = time::Instant::now();
+
         let mut online_player = OnlinePlayerSystem {};
         online_player.run_now(&self.ecs);
+        println!("onl time : {:?}", time::Instant::now() - start);
         let mut attack = AttackSystem {};
         attack.run_now(&self.ecs);
+        println!("att time: {:?}", time::Instant::now() - start);
+
         let mut ongoing_attack = OngoingAttackSystem {};
         ongoing_attack.run_now(&self.ecs);
+        println!("ong att time: {:?}", time::Instant::now() - start);
+
         let mut gold_generation = GoldGenerationSystem {};
         gold_generation.run_now(&self.ecs);
+        println!("gold gen time : {:?}", time::Instant::now() - start);
+
         let mut resources_generation = ResourceGenerationSystem {};
         resources_generation.run_now(&self.ecs);
         let mut build = BuildSystem {};
         build.run_now(&self.ecs);
+        println!("build time : {:?}", time::Instant::now() - start);
+
         let mut territory_stat = TerritoryStatSystem {};
         territory_stat.run_now(&self.ecs);
+        println!("territory stat time : {:?}", time::Instant::now() - start);
+
         let mut defeat = DefeatSystem {};
         defeat.run_now(&self.ecs);
+        println!("defeat time : {:?}", time::Instant::now() - start);
+
         let mut player_info = PlayerInfoSystem {};
         player_info.run_now(&self.ecs);
+        println!("pinfo time : {:?}", time::Instant::now() - start);
+
+        let mut send_map = SendMapSystem {};
+        send_map.run_now(&self.ecs);
+
         let mut player_info_json = PlayerInfoJsonSystem {};
         player_info_json.run_now(&self.ecs);
+        println!("pjson time : {:?}", time::Instant::now() - start);
         self.ecs.maintain();
     }
 }
@@ -88,6 +109,7 @@ fn main() -> rltk::BError {
     gs.ecs.register::<ResourceExtractionBuilding>();
     gs.ecs.register::<WantToBuild>();
     gs.ecs.register::<TerritoryArea>();
+    gs.ecs.register::<WantMap>();
 
     let config = Config::new().unwrap_or_else(|err| {
         println!("Error creating Config: {}", err);
@@ -99,9 +121,7 @@ fn main() -> rltk::BError {
     let message_list: Arc<Mutex<Vec<(network::Message, String)>>> =
         Arc::new(Mutex::new(Vec::new()));
 
-    let map_message = MapMessage::default();
-
-    let map_to_send: Arc<Mutex<MapMessage>> = Arc::new(Mutex::new(map_message));
+    let map_to_send: Arc<Mutex<HashMap<String, MapMessage>>> = Arc::new(Mutex::new(HashMap::new()));
 
     let player_info_to_send: Arc<Mutex<HashMap<String, String>>> =
         Arc::new(Mutex::new(HashMap::new()));

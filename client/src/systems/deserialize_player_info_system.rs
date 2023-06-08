@@ -13,6 +13,6 @@ pub fn deserialise_player_info_system(
             let temp: PlayerInfo = info;
             *player_info = temp.clone();
         }
-        Err(_) => println!("unable to deserialize json"),
+        Err(_) => println!("unable to deserialize player info json"),
     }
 }

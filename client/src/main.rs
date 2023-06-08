@@ -44,10 +44,6 @@ fn main() {
 
     let to_send: Arc<Mutex<Vec<String>>> = Arc::new(Mutex::new(Vec::new()));
     network::lauch_network(data_wrap.protected_data.clone(), to_send.clone());
-    {
-        let mut to_send_guard = to_send.lock().unwrap();
-        to_send_guard.push("a5764857-ae35-34dc-8f25-a9c9e73aa898 map".to_string());
-    }
 
     let to_send_wrap = ToSendWrap {
         to_send: to_send.clone(),

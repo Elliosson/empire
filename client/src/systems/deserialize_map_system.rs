@@ -10,6 +10,9 @@ pub fn deserialize_map_system(from_net_data: Res<DataWrap>, mut map: ResMut<Clie
             let temp: ClientMap = info;
             *map = temp.clone();
         }
-        Err(_) => println!("unable to deserialize json"),
+        Err(_) => println!(
+            "unable to deserialize  map json : {}",
+            data_guard.map_string
+        ),
     }
 }

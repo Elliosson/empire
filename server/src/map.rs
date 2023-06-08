@@ -5,8 +5,8 @@ use rltk::{Rltk, RGB};
 use specs::prelude::*;
 use specs::world::EntitiesRes;
 
-pub const MAPWIDTH: i32 = 80;
-pub const MAPHEIGHT: i32 = 50;
+pub const MAPWIDTH: i32 = 200;
+pub const MAPHEIGHT: i32 = 200;
 
 #[derive(Debug, Clone, Default)]
 pub struct Tile {
@@ -34,7 +34,7 @@ pub fn idx_xy(idx: usize) -> (i32, i32) {
 
 pub fn new_map() -> Map {
     let mut map = Map::default();
-    map.tiles = vec![Tile::default(); MAPWIDTH as usize * 50];
+    map.tiles = vec![Tile::default(); MAPWIDTH as usize * MAPHEIGHT as usize];
 
     // Make the boundaries mountain
     for x in 0..MAPWIDTH {

@@ -86,3 +86,9 @@ pub struct WantToBuild {
     pub name: String,
     pub pos: Position,
 }
+
+#[derive(Component, Clone, Debug, Default, Serialize, Deserialize)]
+pub struct WantMap {
+    pub pos: Position,
+    pub scale: i32,
+}

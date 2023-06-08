@@ -24,7 +24,7 @@ impl Config {
 pub fn run(
     config: Config,
     message_list: Arc<Mutex<Vec<(Message, String)>>>,
-    map_to_send: Arc<Mutex<MapMessage>>, //TODO formaliser le naming des structure partage
+    map_to_send: Arc<Mutex<HashMap<String, MapMessage>>>, //TODO formaliser le naming des structure partage
     player_info_to_send: Arc<Mutex<HashMap<String, String>>>,
 ) {
     ws::listen(config.url, move |out| {
@@ -70,7 +70,7 @@ pub fn run(
 
 fn response(
     msg: Message,
-    map_to_send: Arc<Mutex<MapMessage>>,
+    map_to_send: Arc<Mutex<HashMap<String, MapMessage>>>,
     player_info_to_send: Arc<Mutex<HashMap<String, String>>>,
 ) -> (String, Message) {
     let map_guard = map_to_send.lock().unwrap();
@@ -83,7 +83,13 @@ fn response(
             let uuid = Uuid::new_v4();
             (uuid.to_string(), Message::Registered(uuid, name))
         }
-        Message::Map(_uuid) => (map_guard.map_json.clone(), msg),
+        Message::Map(uuid, _, _, _) => {
+            if let Some(map) = map_guard.get(&uuid.to_string()) {
+                (map.map_json.clone(), msg)
+            } else {
+                ("nok: no map for this uuid".to_string(), msg)
+            }
+        }
         Message::PlayerInfo(uuid) => {
             if let Some(my_player_info) = player_info_guard.get(&uuid.to_string()) {
                 (my_player_info.clone(), msg) // my_player_info is a string

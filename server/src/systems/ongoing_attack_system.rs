@@ -1,14 +1,11 @@
 extern crate specs;
 use crate::map::adjacent_positions;
-use crate::{idx_xy, Gold, Map, MapMessage, OnGoingAttack, Player, Tile};
+use crate::{Gold, Map, OnGoingAttack, Player, Tile};
 pub use common::ClientMap;
-use common::ClientTile;
+
 use specs::prelude::*;
 use std::collections::HashMap;
-use std::{
-    collections::HashSet,
-    sync::{Arc, Mutex},
-};
+use std::collections::HashSet;
 
 pub struct OngoingAttackSystem {}
 
@@ -20,11 +17,10 @@ impl<'a> System<'a> for OngoingAttackSystem {
         WriteStorage<'a, Player>,
         WriteStorage<'a, Gold>,
         WriteExpect<'a, Map>,
-        WriteExpect<'a, Arc<Mutex<MapMessage>>>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
-        let (entities, mut ongoing_attacks, players, mut golds, mut map, map_to_send) = data;
+        let (entities, mut ongoing_attacks, players, mut golds, mut map) = data;
 
         let mut to_delete = HashSet::new();
         let mut defence_cost = HashMap::new();
@@ -65,28 +61,5 @@ impl<'a> System<'a> for OngoingAttackSystem {
         for entity in to_delete.drain() {
             entities.delete(entity).unwrap();
         }
-
-        let mut map_to_send_guard = map_to_send.lock().unwrap();
-        map_to_send_guard.map_json = serde_json::to_string(&format_map_for_client(&map)).unwrap();
     }
-}
-
-pub fn format_map_for_client(map: &Map) -> ClientMap {
-    let mut client_map: ClientMap = ClientMap::default();
-
-    for (i, tile) in map.tiles.iter().enumerate() {
-        let (x, y) = idx_xy(i);
-        client_map.tiles.insert(
-            (x, y),
-            ClientTile {
-                biome: tile.biome.clone(),
-                x,
-                y,
-                owner: tile.owner.clone(),
-                resource: tile.resource.clone(),
-            },
-        );
-    }
-
-    return client_map;
 }

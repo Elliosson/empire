@@ -1,7 +1,7 @@
 extern crate specs;
 use crate::{
     network, Connected, GamePhase, Gold, Player, Position, ResourcesStorage, TerritoryArea,
-    WantToAttack,
+    WantMap, WantToAttack,
 };
 use common::PlayerInfo;
 
@@ -26,6 +26,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
         WriteStorage<'a, GamePhase>,
         WriteStorage<'a, ResourcesStorage>,
         WriteStorage<'a, TerritoryArea>,
+        WriteStorage<'a, WantMap>,
     );
 
     fn run(&mut self, data: Self::SystemData) {
@@ -42,6 +43,7 @@ impl<'a> System<'a> for OnlinePlayerSystem {
             mut game_phases,
             mut resources_storages,
             mut territory_areas,
+            mut want_maps,
         ) = data;
 
         let mut new_player_list = Vec::new();
@@ -82,6 +84,26 @@ impl<'a> System<'a> for OnlinePlayerSystem {
                                         WantToAttack {
                                             pos: Position::new(x, y),
                                             gold_percent: percent,
+                                        },
+                                    )
+                                    .unwrap();
+                            }
+                            None => {
+                                println!("Error: Trying to connect with an unknow uuid")
+                            }
+                        }
+                    }
+                    network::Message::Map(uuid, x, y, scale) => {
+                        uid = uuid.to_string();
+                        player_entity = player_hash.hash.get(&uid.clone());
+                        match player_entity {
+                            Some(player_entity) => {
+                                want_maps
+                                    .insert(
+                                        *player_entity,
+                                        WantMap {
+                                            pos: Position { x, y },
+                                            scale,
                                         },
                                     )
                                     .unwrap();
