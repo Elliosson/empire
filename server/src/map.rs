@@ -1,5 +1,7 @@
+use crate::DezoomedMap;
 use crate::Position;
 use common::Biome;
+use common::Color;
 use common::Resources;
 use rltk::{Rltk, RGB};
 use specs::prelude::*;
@@ -46,11 +48,11 @@ pub fn new_map() -> Map {
         map.tiles[xy_idx(MAPWIDTH - 1, y)].biome = Biome::Mountain;
     }
 
-    // Now we'll randomly splat a bunch of desert.
+    // Now we'll randomly splat a bunch of desert. on the left side
     let mut rng = rltk::RandomNumberGenerator::new();
 
-    for _i in 0..400 {
-        let x = rng.roll_dice(1, MAPWIDTH - 1);
+    for _i in 0..50000 {
+        let x = rng.roll_dice(1, 100);
         let y = rng.roll_dice(1, MAPHEIGHT - 1);
         let idx = xy_idx(x, y);
         if idx != xy_idx(40, 25) {
@@ -178,4 +180,35 @@ pub fn is_inside_map(pos: Position) -> bool {
         return false;
     }
     return true;
+}
+
+pub fn initialize_dezoomed_map(map: &Map) -> DezoomedMap {
+    let mut dezoomed_map = DezoomedMap::default();
+
+    for (idx, tile) in map.tiles.iter().enumerate() {
+        let (x, y) = idx_xy(idx);
+        for level in 2..5 {
+            let dezoom_x = x / 8;
+            let dezoom_y = y / 8;
+            let color = dezoomed_map
+                .hash_map
+                .entry((dezoom_x, dezoom_y, level))
+                .or_insert(Color::default());
+            match tile.biome {
+                Biome::Plain => color.g += 1. / 8_i32.pow(level as u32) as f32,
+                Biome::Forest => color.g += 1. / 8_i32.pow(level as u32) as f32,
+                Biome::Desert => {
+                    color.g += 1. / 8_i32.pow(level as u32) as f32;
+                    color.b += 1. / 8_i32.pow(level as u32) as f32;
+                }
+                Biome::Mountain => {
+                    color.r += 0.7 / 8_i32.pow(level as u32) as f32;
+                    color.g += 0.7 / 8_i32.pow(level as u32) as f32;
+                    color.b += 0.7 / 8_i32.pow(level as u32) as f32;
+                }
+            }
+        }
+    }
+
+    return dezoomed_map;
 }

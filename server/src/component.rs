@@ -1,4 +1,4 @@
-use common::Resources;
+use common::{Color, Resources};
 use rltk::RGB;
 use serde::{Deserialize, Serialize};
 use specs::prelude::*;
@@ -101,4 +101,9 @@ pub struct GoldGenerationTiming {
 #[derive(Component, Clone, Debug)]
 pub struct TerritoryStatTiming {
     pub last_time: Instant,
+}
+
+#[derive(Clone, Debug, Default)]
+pub struct DezoomedMap {
+    pub hash_map: HashMap<(i32, i32, i32), Color>,
 }

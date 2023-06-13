@@ -92,7 +92,9 @@ impl State {
 
 fn main() -> rltk::BError {
     let mut gs = State { ecs: World::new() };
-    gs.ecs.insert(new_map());
+    let map = new_map();
+    gs.ecs.insert(initialize_dezoomed_map(&map));
+    gs.ecs.insert(map);
     gs.ecs.insert(UuidPlayerHash::new());
     gs.ecs.insert(NamePlayerHash::new());
     gs.ecs.insert(GoldGenerationTiming {
