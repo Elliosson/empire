@@ -38,6 +38,7 @@ pub struct ClientTile {
 pub struct ClientMap {
     #[serde_as(as = "Vec<(_, _)>")]
     pub tiles: HashMap<(i32, i32), ClientTile>,
+    pub dezoomed_map: Option<MapLevel>,
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct MapMessage {
@@ -63,4 +64,19 @@ pub struct PlayerInfo {
     pub resources: HashMap<Resources, f32>,
     pub buildings: Vec<BuildingInfo>,
     pub player_to_golds: HashMap<String, f32>,
+}
+
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct Color {
+    pub r: f32,
+    pub g: f32,
+    pub b: f32,
+}
+
+#[serde_as]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct MapLevel {
+    pub level: i32,
+    #[serde_as(as = "Vec<(_, _)>")]
+    pub map: HashMap<(i32, i32), Color>,
 }

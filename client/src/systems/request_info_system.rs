@@ -21,8 +21,10 @@ pub fn request_info_system(
 
         camera_pos_x = translation.x;
         camera_pos_y = translation.y;
-        camera_scale = camera.scale.x;
+        camera_scale = camera.scale.y;
     }
+
+    println!("camera scale {}", camera_scale);
 
     if last_time.time.elapsed() > ask_info_interval {
         let mut to_send_guard = to_send.to_send.lock().unwrap();

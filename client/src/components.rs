@@ -15,7 +15,8 @@ pub struct Renderable {
 
 #[derive(Resource, Debug, Clone, Default)]
 pub struct PositionToTileEntity {
-    pub hash: HashMap<(i32, i32), Entity>,
+    pub hash: HashMap<(i32, i32), Entity>, //x, y (base level map)
+    pub dezoomed_map: HashMap<(i32, i32, i32), Entity>, // x, y, level
 }
 
 #[derive(Resource, Debug, Clone, Default)]
