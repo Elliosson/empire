@@ -5,8 +5,8 @@ use rltk::{Rltk, RGB};
 use specs::prelude::*;
 use specs::world::EntitiesRes;
 
-pub const MAPWIDTH: i32 = 200;
-pub const MAPHEIGHT: i32 = 200;
+pub const MAPWIDTH: i32 = 1000;
+pub const MAPHEIGHT: i32 = 1000;
 
 #[derive(Debug, Clone, Default)]
 pub struct Tile {

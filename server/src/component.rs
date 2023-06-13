@@ -3,7 +3,7 @@ use rltk::RGB;
 use serde::{Deserialize, Serialize};
 use specs::prelude::*;
 use specs_derive::*;
-use std::collections::HashMap;
+use std::{collections::HashMap, time::Instant};
 
 #[derive(Component, Clone, Debug, PartialEq, Eq, Hash, Copy, Serialize, Deserialize, Default)]
 pub struct Position {
@@ -91,4 +91,14 @@ pub struct WantToBuild {
 pub struct WantMap {
     pub pos: Position,
     pub scale: i32,
+}
+
+#[derive(Component, Clone, Debug)]
+pub struct GoldGenerationTiming {
+    pub last_time: Instant,
+}
+
+#[derive(Component, Clone, Debug)]
+pub struct TerritoryStatTiming {
+    pub last_time: Instant,
 }

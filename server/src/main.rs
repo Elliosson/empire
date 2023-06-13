@@ -11,6 +11,7 @@ use network::Config;
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::time::Instant;
 use std::{process, time};
 use systems::*;
 mod systems;
@@ -94,6 +95,12 @@ fn main() -> rltk::BError {
     gs.ecs.insert(new_map());
     gs.ecs.insert(UuidPlayerHash::new());
     gs.ecs.insert(NamePlayerHash::new());
+    gs.ecs.insert(GoldGenerationTiming {
+        last_time: Instant::now(),
+    });
+    gs.ecs.insert(TerritoryStatTiming {
+        last_time: Instant::now(),
+    });
 
     gs.ecs.register::<Position>();
     gs.ecs.register::<Renderable>();
