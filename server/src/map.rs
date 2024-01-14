@@ -4,8 +4,11 @@ use common::Biome;
 use common::Color;
 use common::Resources;
 use rltk::{Rltk, RGB};
+use serde::Deserialize;
+use serde::Serialize;
 use specs::prelude::*;
 use specs::world::EntitiesRes;
+use std::fs::File;
 
 pub const MAPWIDTH: i32 = 20;
 pub const MAPHEIGHT: i32 = 20;
@@ -23,6 +26,11 @@ pub struct Map {
     pub tiles: Vec<Tile>,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct JSonMap {
+    pub lines: Vec<Vec<String>>,
+}
+
 pub fn xy_idx(x: i32, y: i32) -> usize {
     (y * MAPWIDTH + x) as usize
 }
@@ -35,42 +43,46 @@ pub fn idx_xy(idx: usize) -> (i32, i32) {
 }
 
 pub fn new_map() -> Map {
+    let mut file = File::open("src/map.json").unwrap();
+    let json_map: JSonMap = serde_json::from_reader(file).expect("JSON was not well-formatted");
+
     let mut map = Map::default();
     map.tiles = vec![Tile::default(); MAPWIDTH as usize * MAPHEIGHT as usize];
 
-    // Make the boundaries mountain
-    for x in 0..MAPWIDTH {
-        map.tiles[xy_idx(x, 0)].biome = Biome::Mountain;
-        map.tiles[xy_idx(x, MAPHEIGHT - 1)].biome = Biome::Mountain;
-    }
     for y in 0..MAPHEIGHT {
-        map.tiles[xy_idx(0, y)].biome = Biome::Mountain;
-        map.tiles[xy_idx(MAPWIDTH - 1, y)].biome = Biome::Mountain;
-    }
-
-    // Now we'll randomly splat a bunch of desert. on the left side
-    let mut rng = rltk::RandomNumberGenerator::new();
-
-    for _i in 0..3 {
-        let x = rng.roll_dice(1, 100);
-        let y = rng.roll_dice(1, MAPHEIGHT - 1);
-        let idx = xy_idx(x, y);
-        if idx != xy_idx(40, 25) {
-            map.tiles[idx].biome = Biome::Desert;
+        for x in 0..MAPWIDTH {
+            map.tiles[xy_idx(x, y)].biome = match json_map.lines[y as usize][x as usize].as_str() {
+                "plain" => Biome::Plain,
+                "mountain" => Biome::Mountain,
+                "forest" => Biome::Forest,
+                _ => Biome::Plain,
+            };
         }
     }
 
-    // Now we'll randomly splat a bunch of wood.
-    let mut rng = rltk::RandomNumberGenerator::new();
+    // // Now we'll randomly splat a bunch of desert. on the left side
+    // let mut rng = rltk::RandomNumberGenerator::new();
 
-    for _i in 0..3 {
-        let x = rng.roll_dice(1, MAPWIDTH - 1);
-        let y = rng.roll_dice(1, MAPHEIGHT - 1);
-        let idx = xy_idx(x, y);
-        if idx != xy_idx(40, 25) {
-            map.tiles[idx].resource = Some(Resources::Wood);
-        }
-    }
+    // for _i in 0..3 {
+    //     let x = rng.roll_dice(1, 100);
+    //     let y = rng.roll_dice(1, MAPHEIGHT - 1);
+    //     let idx = xy_idx(x, y);
+    //     if idx != xy_idx(40, 25) {
+    //         map.tiles[idx].biome = Biome::Desert;
+    //     }
+    // }
+
+    // // Now we'll randomly splat a bunch of wood.
+    // let mut rng = rltk::RandomNumberGenerator::new();
+
+    // for _i in 0..3 {
+    //     let x = rng.roll_dice(1, MAPWIDTH - 1);
+    //     let y = rng.roll_dice(1, MAPHEIGHT - 1);
+    //     let idx = xy_idx(x, y);
+    //     if idx != xy_idx(40, 25) {
+    //         map.tiles[idx].resource = Some(Resources::Wood);
+    //     }
+    // }
 
     map
 }

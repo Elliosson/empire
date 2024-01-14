@@ -19,6 +19,8 @@ pub fn map_system(
         let mut image = match tile.biome {
             Biome::Plain => asset_server.load("plain.png"),
             Biome::Mountain => asset_server.load("mountain.png"),
+            Biome::Forest => asset_server.load("forest.png"),
+
             _ => asset_server.load("plain.png"),
         };
 
