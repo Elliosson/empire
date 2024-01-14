@@ -43,7 +43,7 @@ pub fn idx_xy(idx: usize) -> (i32, i32) {
 }
 
 pub fn new_map() -> Map {
-    let mut file = File::open("src/map.json").unwrap();
+    let file = File::open("src/map.json").unwrap();
     let json_map: JSonMap = serde_json::from_reader(file).expect("JSON was not well-formatted");
 
     let mut map = Map::default();
