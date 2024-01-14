@@ -7,8 +7,8 @@ use rltk::{Rltk, RGB};
 use specs::prelude::*;
 use specs::world::EntitiesRes;
 
-pub const MAPWIDTH: i32 = 1000;
-pub const MAPHEIGHT: i32 = 1000;
+pub const MAPWIDTH: i32 = 20;
+pub const MAPHEIGHT: i32 = 20;
 
 #[derive(Debug, Clone, Default)]
 pub struct Tile {
@@ -51,7 +51,7 @@ pub fn new_map() -> Map {
     // Now we'll randomly splat a bunch of desert. on the left side
     let mut rng = rltk::RandomNumberGenerator::new();
 
-    for _i in 0..50000 {
+    for _i in 0..3 {
         let x = rng.roll_dice(1, 100);
         let y = rng.roll_dice(1, MAPHEIGHT - 1);
         let idx = xy_idx(x, y);
@@ -63,7 +63,7 @@ pub fn new_map() -> Map {
     // Now we'll randomly splat a bunch of wood.
     let mut rng = rltk::RandomNumberGenerator::new();
 
-    for _i in 0..400 {
+    for _i in 0..3 {
         let x = rng.roll_dice(1, MAPWIDTH - 1);
         let y = rng.roll_dice(1, MAPHEIGHT - 1);
         let idx = xy_idx(x, y);
