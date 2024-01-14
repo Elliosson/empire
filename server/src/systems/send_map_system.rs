@@ -73,6 +73,7 @@ pub fn format_map_for_client(
                         x,
                         y,
                         owner: tile.owner.clone(),
+                        building: tile.building.clone(),
                         resource: tile.resource.clone(),
                     },
                 );

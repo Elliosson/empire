@@ -20,3 +20,5 @@ mod territory_stat_system;
 pub use territory_stat_system::TerritoryStatSystem;
 mod send_map_system;
 pub use send_map_system::SendMapSystem;
+mod new_city_system;
+pub use new_city_system::NewCitySystem;

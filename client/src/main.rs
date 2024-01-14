@@ -11,6 +11,9 @@ pub use components::*;
 mod systems;
 pub use systems::*;
 mod helper;
+
+pub const TILE_SIZE: i32 = 32;
+
 //add default and stuff?
 #[derive(Resource)]
 pub struct DataWrap {
@@ -80,7 +83,7 @@ fn main() {
         .add_system(map_system)
         .add_system(mouse_input_system)
         .add_system(username_ui)
-        .add_system(attack_ui)
+        .add_system(build_city_ui)
         .add_system(building_ui)
         .add_system(info_ui)
         .add_system(cursor_position_system)

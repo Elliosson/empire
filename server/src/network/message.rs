@@ -8,6 +8,7 @@ pub enum Message {
     Map(Uuid, i32, i32, i32), //uuid, x, y, scale
     PlayerInfo(Uuid),
     Attack(Uuid, i32, i32, i32), // uuid, x, y, percent
+    NewCity(Uuid, i32, i32),     //uuid, x, y
 }
 
 impl Message {
@@ -42,6 +43,12 @@ impl Message {
                     let percent: i32 = message[2].parse().unwrap();
                     //println!("attack {} {}", x, y);
                     Some(Message::Attack(id, x, y, percent))
+                }
+                "new_city" => {
+                    let message: Vec<&str> = parts.collect();
+                    let x: i32 = message[0].parse().unwrap();
+                    let y: i32 = message[1].parse().unwrap();
+                    Some(Message::NewCity(id, x, y))
                 }
                 "player_info" => Some(Message::PlayerInfo(id)),
 

@@ -50,7 +50,6 @@ pub fn move_camera_system(
                         new_scale = Vec3::new(20., 20., 20.);
                     }
                     transform.scale = new_scale;
-                    println!("camera scale: {}", transform.scale)
                 }
             }
         }

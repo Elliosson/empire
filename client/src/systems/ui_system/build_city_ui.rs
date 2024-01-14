@@ -5,7 +5,7 @@ use bevy_egui::{
     EguiContext,
 };
 
-pub fn attack_ui(
+pub fn build_city_ui(
     mut egui_ctx: ResMut<EguiContext>,
     mut ui_state: ResMut<UiState>,
     to_send: ResMut<ToSendWrap>,
@@ -22,23 +22,19 @@ pub fn attack_ui(
     let window = windows.get_primary().unwrap();
 
     if ui_state.attack_ui_open {
-        egui::Area::new("attack area")
+        egui::Area::new("new city area")
             .current_pos([
                 map_click.screen_pos.x - 10.,
                 window.height() - map_click.screen_pos.y - 10.,
             ])
             .show(egui_ctx.ctx_mut(), |ui| {
-                if ui.button("Attack").clicked() {
+                if ui.button("NewCity").clicked() {
                     {
-                        println!("attack {} {}", map_click.map_pos.x, map_click.map_pos.y);
+                        println!("new city {} {}", map_click.map_pos.x, map_click.map_pos.y);
                         let mut to_send_guard = to_send.to_send.lock().unwrap();
                         to_send_guard.push(format!(
-                            "{} {} {} {} {}",
-                            data_guard.my_uid,
-                            "attack",
-                            map_click.map_pos.x,
-                            map_click.map_pos.y,
-                            ui_state.gold_percent
+                            "{} {} {} {}",
+                            data_guard.my_uid, "new_city", map_click.map_pos.x, map_click.map_pos.y,
                         ));
                         ui_state.attack_ui_open = false;
                     }

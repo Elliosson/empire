@@ -52,6 +52,8 @@ impl State {
         println!("onl time : {:?}", time::Instant::now() - start);
         let mut attack = AttackSystem {};
         attack.run_now(&self.ecs);
+        let mut attack = NewCitySystem {};
+        attack.run_now(&self.ecs);
         println!("att time: {:?}", time::Instant::now() - start);
 
         let mut ongoing_attack = OngoingAttackSystem {};
@@ -119,6 +121,8 @@ fn main() -> rltk::BError {
     gs.ecs.register::<WantToBuild>();
     gs.ecs.register::<TerritoryArea>();
     gs.ecs.register::<WantMap>();
+    gs.ecs.register::<WantNewCity>();
+    gs.ecs.register::<City>();
 
     let config = Config::new().unwrap_or_else(|err| {
         println!("Error creating Config: {}", err);

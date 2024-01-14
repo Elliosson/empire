@@ -103,6 +103,17 @@ pub struct TerritoryStatTiming {
     pub last_time: Instant,
 }
 
+#[derive(Component, Clone, Debug, Default)]
+pub struct City {
+    pub name: String,
+    pub owner: String,
+}
+
+#[derive(Component, Clone, Debug, Default)]
+pub struct WantNewCity {
+    pub pos: Position,
+}
+
 #[derive(Clone, Debug, Default)]
 pub struct DezoomedMap {
     pub hash_map: HashMap<(i32, i32, i32), Color>,

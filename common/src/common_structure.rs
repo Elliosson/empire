@@ -24,12 +24,19 @@ pub enum Resources {
     Wheat,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize, Default, PartialEq, Eq, Hash)]
+pub enum Building {
+    #[default]
+    City,
+}
+
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ClientTile {
     pub biome: Biome,
     pub x: i32,
     pub y: i32,
     pub owner: String,
+    pub building: Option<Building>,
     pub resource: Option<Resources>,
 }
 

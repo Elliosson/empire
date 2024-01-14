@@ -1,6 +1,7 @@
 use crate::DezoomedMap;
 use crate::Position;
 use common::Biome;
+use common::Building;
 use common::Color;
 use common::Resources;
 use rltk::{Rltk, RGB};
@@ -18,6 +19,7 @@ pub struct Tile {
     pub biome: Biome,
     pub owner: String,
     pub resource: Option<Resources>,
+    pub building: Option<Building>,
     pub entity: Option<Entity>,
 }
 

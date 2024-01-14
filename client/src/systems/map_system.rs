@@ -1,6 +1,6 @@
-use crate::PositionToTileEntity;
+use crate::{PositionToTileEntity, TILE_SIZE};
 use bevy::prelude::*;
-use common::{Biome, ClientMap, ClientTile, Resources};
+use common::{Biome, Building, ClientMap, ClientTile, Resources};
 use std::collections::hash_map::DefaultHasher;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
@@ -31,6 +31,12 @@ pub fn map_system(
             };
         }
 
+        if let Some(building) = &tile.building {
+            image = match building {
+                Building::City => asset_server.load("city.png"),
+            };
+        }
+
         if let Some(&entity) = pos_to_tile_entity.hash.get(&(tile.x, tile.y)) {
             if let Ok(mut image_handle) = image_handles.get_component_mut::<Handle<Image>>(entity) {
                 *image_handle = image;
@@ -43,8 +49,8 @@ pub fn map_system(
                 .spawn(SpriteBundle {
                     texture: image,
                     transform: Transform::from_translation(Vec3::new(
-                        (tile.x * 32) as f32,
-                        (tile.y * 32) as f32,
+                        (tile.x * TILE_SIZE + TILE_SIZE / 2) as f32,
+                        (tile.y * TILE_SIZE + TILE_SIZE / 2) as f32,
                         0.,
                     )),
                     ..default()

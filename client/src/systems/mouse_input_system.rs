@@ -1,5 +1,5 @@
 use crate::helper::screen_coord_to_world_coord;
-use crate::{MapClick, UiState};
+use crate::{MapClick, UiState, TILE_SIZE};
 use crate::{Point, RightClickedTile};
 use bevy::input::mouse::*;
 use bevy::input::ButtonState;
@@ -74,8 +74,8 @@ fn get_map_click(
             mouse_pos.y,
             camera_scale,
         );
-        let x = world_x as i32 / 10;
-        let y = world_y as i32 / 10;
+        let x = world_x as i32 / TILE_SIZE;
+        let y = world_y as i32 / TILE_SIZE;
 
         map_click.map_pos = Point {
             x: x as f32,
