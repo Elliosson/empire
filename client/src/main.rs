@@ -92,5 +92,11 @@ fn main() {
 }
 
 fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    commands.spawn(Camera2dBundle {
+        transform: Transform {
+            translation: Vec3::new(320., 320., 0.),
+            ..Default::default()
+        },
+        ..Default::default()
+    });
 }
